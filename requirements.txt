@@ -16,7 +16,6 @@ protobuf==3.11.3
 pyOpenSSL==19.1.0
 pytest==5.4.1
 python-dotenv==0.13.0
-tokio==0.2.0
 typing_extensions==3.7.4.2
 uvloop==0.14.0
 wincertstore==0.2
