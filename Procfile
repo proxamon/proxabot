@@ -1,0 +1,1 @@
+worker: python newRetr0Bot.py
