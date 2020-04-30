@@ -62,7 +62,7 @@ async def _8ball(ctx, *, question):
 
 @client.command()
 async def hi(ctx):
-    ctx.send(f'Hello there, {ctx.message.author}')
+    await ctx.send(f'Hello there, {ctx.message.author}')
 
 
 @client.command()
