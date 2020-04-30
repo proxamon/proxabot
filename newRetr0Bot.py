@@ -94,6 +94,15 @@ async def clear(ctx, number=5):
 async def kick(ctx, member : discord.Member, * , reason = None):
     await member.kick(reason=reason)
 
+@client.event
+async def on_message(message):
+    responses=["Still you", "ur dad", "It's not me, it's youuuuu.", "no u.", "uno reverse".]
+    if message.author==client.user:
+        return
+    if message.content == "no u" or message.content == "No u":
+        reply=random.choice(responses)
+        await ctx.send(reply)
+
 @client.command()
 @commands.has_permissions(ban_members=True)
 async def ban(ctx, member : discord.Member, * , reason = None):
