@@ -61,7 +61,7 @@ async def _8ball(ctx, *, question):
     await ctx.send(f'Question: {question}\nAnswer: {random.choice(responses)}')
 
 @client.command()
-async def hello(ctx):
+async def hi(ctx):
     ctx.send(f'Hello there, {ctx.message.author}')
 
 
