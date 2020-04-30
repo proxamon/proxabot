@@ -14,6 +14,14 @@ client=commands.Bot(command_prefix="$")
 async def on_ready():
     print("Bot is ready")
 
+@client.event
+async def on_message(message):
+    responses=["Still you","https://www.youtube.com/watch?v=TyfNZs2dPto", "ur dad", "It's not me, it's youuuuu.", "no u.", "uno reverse", "ur face", "don't be a cuck", "undoubtedly u" ]
+    if "no u" in str(message.content.lower()) and not(message.author == client.user):
+        reply=random.choice(responses)
+        await message.channel.send(reply)
+    await client.process_commands(message)
+
 client.remove_command("help")
 
 
@@ -60,7 +68,7 @@ async def _8ball(ctx, *, question):
                  "Very doubtful."]
     await ctx.send(f'Question: {question}\nAnswer: {random.choice(responses)}')
 
-@client.command()
+@client.command(aliases = ["hello", "Hi", "Hey", "Hello", "hey"])
 async def hi(ctx):
     await ctx.send(f'Hello there, {ctx.message.author}')
 
@@ -94,14 +102,7 @@ async def clear(ctx, number=5):
 async def kick(ctx, member : discord.Member, * , reason = None):
     await member.kick(reason=reason)
 
-@client.event
-async def on_message(message):
-    responses=["Still you", "ur dad", "It's not me, it's youuuuu.", "no u.", "uno reverse"]
-    if message.author==client.user:
-        return
-    if message.content == "no u" or message.content == "No u":
-        reply=random.choice(responses)
-        await ctx.send(reply)
+
 
 @client.command()
 @commands.has_permissions(ban_members=True)
