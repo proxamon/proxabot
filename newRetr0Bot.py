@@ -22,6 +22,8 @@ async def on_message(message):
         await message.channel.send(reply)
     await client.process_commands(message)
 
+
+
 client.remove_command("help")
 
 
@@ -32,6 +34,7 @@ async def help(ctx):
               "8ball":"Returns advice for the question supplied.",
               "spam":"Types an inputted string of text an inputted number of times.",
               "clear":"Deletes a specified number of messages",
+              "hi":"Sends a friendly greeting"
               "kick":"Kicks a member",
               "ban":"Bans a member"}
     embed= discord.Embed( colour = discord.Colour.blue())
