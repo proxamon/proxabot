@@ -68,7 +68,13 @@ async def _8ball(ctx, *, question):
                  "My reply is no.",
                  "My sources say no.",
                  "Outlook not so good.",
-                 "Very doubtful."]
+                 "Very doubtful.",
+                 "Absolutely",
+                 "I believe so",
+                 "My response is undecided.",
+                 "I can't say.",
+                 "Do what you feel is best.",
+                 "You need Jesus for that."]
     await ctx.send(f'Question: {question}\nAnswer: {random.choice(responses)}')
 
 @client.command(aliases = ["hello", "Hi", "Hey", "Hello", "hey"])
