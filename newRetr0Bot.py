@@ -55,7 +55,7 @@ async def choice(ctx,*,string):
     else:
         options = string.split(",")
         await ctx.send("My choice:")
-        await ctx.send(random.choice(options))
+        await ctx.send(random.choice(options).capitalize())
 
 @client.command(aliases=["8ball", "advice", "chance"])
 async def _8ball(ctx, *, question):
