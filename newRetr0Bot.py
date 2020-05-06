@@ -26,6 +26,9 @@ async def on_message(message):
 
 client.remove_command("help")
 
+@client.command()
+async def hit(ctx):
+    await ctx.send("Watch Yo Profanity!")
 
 @client.command()
 async def help(ctx):
@@ -51,9 +54,18 @@ async def ping(ctx):
 @client.command(aliases=["choose"])
 async def choice(ctx,*,string):
     if " or " in string:
-        await ctx.send("Please do not put \"or\" in the sentence.")
+        string=string.replace(" or ", ",")
+    string = string.replace(", ",",")
+    options = string.split(",")
+    if "anime" in options or "Anime" in options:
+        number = random.randint(0,10)
+        if number<2:
+            await ctx.send("My choice:")
+            await ctx.send(random.choice(options).capitalize())
+        else:
+            await ctx.send("My choice:")
+            await ctx.send("Anime")
     else:
-        options = string.split(",")
         await ctx.send("My choice:")
         await ctx.send(random.choice(options).capitalize())
 
@@ -89,10 +101,10 @@ async def _8ball(ctx, *, question):
 
 @client.command(aliases = ["hello", "Hi", "Hey", "Hello", "hey"])
 async def hi(ctx):
-    if ctx.message.author == "Retr0fade#6542":
+    if ctx.message.author.display_name == "Retr0fade":
         await ctx.send("Hello, creator.")
     else:
-        await ctx.send(f'Hello there, {ctx.message.author}')
+        await ctx.send(f'Hello there, {ctx.message.author.display_name}')
 
 
 @client.command()
