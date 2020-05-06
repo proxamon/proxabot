@@ -89,7 +89,10 @@ async def _8ball(ctx, *, question):
 
 @client.command(aliases = ["hello", "Hi", "Hey", "Hello", "hey"])
 async def hi(ctx):
-    await ctx.send(f'Hello there, {ctx.message.author}')
+    if ctx.message.author == "Retr0fade#6542":
+        await ctx.send("Hello, creator.")
+    else:
+        await ctx.send(f'Hello there, {ctx.message.author}')
 
 
 @client.command()
