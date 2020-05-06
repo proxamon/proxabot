@@ -33,6 +33,7 @@ async def help(ctx):
     commands={"ping":" Returns the latency",
               "8ball":"Returns advice for the question supplied.",
               "spam":"Types an inputted string of text an inputted number of times.",
+              "choice":"Chooses an option from a list separated by commas.",
               "clear":"Deletes a specified number of messages",
               "hi":"Sends a friendly greeting",
               "kick":"Kicks a member",
@@ -46,6 +47,15 @@ async def help(ctx):
 @client.command()
 async def ping(ctx):
     await ctx.send(f"Pong! {round(client.latency * 1000)}ms")
+
+@client.command(aliases=["choose"])
+async def choice(ctx,*,string):
+    if " or " in string:
+        await ctx.send("Please do not put \"or\" in the sentence.")
+    else:
+        options = string.split(",")
+        await ctx.send("My choice:")
+        await ctx.send(random.choice(options))
 
 @client.command(aliases=["8ball", "advice", "chance"])
 async def _8ball(ctx, *, question):
