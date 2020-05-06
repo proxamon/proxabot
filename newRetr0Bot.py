@@ -3,6 +3,7 @@ import random
 from discord.ext import commands
 import os
 from dotenv import load_dotenv
+import time
 
 load_dotenv()
 TOKEN=os.getenv("DISCORD_TOKEN")
@@ -36,7 +37,7 @@ async def help(ctx):
     commands={"ping":" Returns the latency",
               "8ball":"Returns advice for the question supplied.",
               "spam":"Types an inputted string of text an inputted number of times.",
-              "choice":"Chooses an option from a list separated by commas.",
+              "choice":"Chooses an option from a provided list.",
               "clear":"Deletes a specified number of messages",
               "hi":"Sends a friendly greeting",
               "kick":"Kicks a member",
@@ -48,26 +49,58 @@ async def help(ctx):
     await ctx.send(author, embed=embed)
 
 @client.command()
+async def roast(ctx):
+    roasts=["You’re the reason God created the middle finger.",
+            "You’re a grey sprinkle on a rainbow cupcake.",
+            "If your brain was dynamite, there wouldn’t be enough to blow your hat off.",
+            "You are more disappointing than an unsalted pretzel.",
+            "Light travels faster than sound which is why you seemed bright until you spoke.",
+            "You're so annoying, you make your Happy Meal cry.",
+            "You have so many gaps in your teeth it looks like your tongue is in jail.",
+            "Your secrets are always safe with me. I never even listen when you tell me them.",
+            "I’ll never forget the first time we met. But I’ll keep trying.",
+            "I forgot the world revolves around you. My apologies, how silly of me.",
+            "I only take you everywhere I go just so I don’t have to kiss you goodbye.",
+            "Hold still. I’m trying to imagine you with personality.",
+            "Your face makes onions cry.",
+            "It’s impossible to underestimate you.",
+            "I’m not a nerd, I’m just smarter than you.",
+            "Keep rolling your eyes, you might eventually find a brain.",
+            "Your face is just fine but we’ll have to put a bag over that personality.",
+            "You bring everyone so much joy, when you leave the room."]
+    chosenOne=random.choice(roasts)
+    if chosenOne=="You bring everyone so much joy, when you leave the room.":
+        chosenOne=chosenOne.split(",")
+        for x in chosenOne:
+            await ctx.send(x)
+            time.sleep(1)
+    else:
+        await ctx.send(chosenOne)
+
+@client.command()
 async def ping(ctx):
     await ctx.send(f"Pong! {round(client.latency * 1000)}ms")
 
 @client.command(aliases=["choose"])
-async def choice(ctx,*,string):
-    if " or " in string:
-        string=string.replace(" or ", ",")
-    string = string.replace(", ",",")
-    options = string.split(",")
-    if "anime" in options or "Anime" in options:
-        number = random.randint(0,10)
-        if number<2:
-            await ctx.send("My choice:")
-            await ctx.send(random.choice(options).capitalize())
+async def choice(ctx,*,string="True"):
+    if string=="True":
+        await ctx.send("Please enter a list of options after $choice.")
+    else:
+        if " or " in string:
+            string=string.replace(" or ", ",")
+        string = string.replace(", ",",")
+        options = string.split(",")
+        if "anime" in options or "Anime" in options:
+            number = random.randint(0,10)
+            if number<2:
+                await ctx.send("My choice:")
+                await ctx.send(random.choice(options).capitalize())
+            else:
+                await ctx.send("My choice:")
+                await ctx.send("Anime")
         else:
             await ctx.send("My choice:")
-            await ctx.send("Anime")
-    else:
-        await ctx.send("My choice:")
-        await ctx.send(random.choice(options).capitalize())
+            await ctx.send(random.choice(options).capitalize())
 
 @client.command(aliases=["8ball", "advice", "chance"])
 async def _8ball(ctx, *, question):
