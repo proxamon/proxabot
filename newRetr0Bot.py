@@ -22,9 +22,9 @@ async def on_message(message):
     if "no u" in str(message.content.lower()) and not(message.author == client.user):
         reply=random.choice(responses1)
         await message.channel.send(reply)
-    elif "thank" in str(message.content.lower()) and not(message.author == client.user):
-        reply=random.choice(responses2)
-        await message.channel.send(reply)
+    #elif "thank" in str(message.content.lower()) and not(message.author == client.user):
+        #reply=random.choice(responses2)
+        #await message.channel.send(reply)
     await client.process_commands(message)
 
 
