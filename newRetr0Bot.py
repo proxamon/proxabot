@@ -17,9 +17,13 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    responses=["Still you","https://www.youtube.com/watch?v=TyfNZs2dPto", "ur dad", "It's not me, it's youuuuu.", "no u.", "uno reverse", "ur face", "don't be a cuck", "undoubtedly u" ]
+    responses1=["Still you","https://www.youtube.com/watch?v=TyfNZs2dPto", "ur dad", "It's not me, it's youuuuu.", "no u.", "uno reverse", "ur face", "don't be a cuck", "undoubtedly u" ]
+    responses2=["The pleasure's all mine.", "No problem!", "You are very welcome.", "At least someone says thank you.", "Your gratitude is much appreciated.", "There's no need to thank me."]
     if "no u" in str(message.content.lower()) and not(message.author == client.user):
-        reply=random.choice(responses)
+        reply=random.choice(responses1)
+        await message.channel.send(reply)
+    elif "thank" in str(message.content.lower()) and not(message.author == client.user):
+        reply=random.choice(responses2)
         await message.channel.send(reply)
     await client.process_commands(message)
 
