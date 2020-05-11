@@ -27,6 +27,28 @@ async def on_message(message):
         #await message.channel.send(reply)
     await client.process_commands(message)
 
+@client.command()
+async def topic(ctx):
+    starters=["What are the top three things on your bucket list?",
+              "How do you think you will die?",
+              "What has been the lowest point of your life?",
+              "If you could ask for a miracle, what would it be?",
+              "Where do you see yourself in five years?",
+              "What is the biggest risk you’ve ever taken?",
+              "What would your ideal life look like?",
+              "If someone gave you an envelope with your death date inside of it, would you open it?",
+              "When have you been the most happy?",
+              "Do you know anyone who is living their life to the fullest?",
+              "What is your idea of the perfect day?",
+              "Who has been the most influential person in your life and why?",
+              "What book had a big influence on you?",
+              "Do you think your priorities have changed since you were younger?",
+              "What is the most memorable lesson you learned from your parents?",
+              "What does success mean to you?",
+              "What is the most difficult thing you’ve ever done?",
+              "What scares you most about your future?",
+              "What keeps you up at night?"]
+    await ctx.send(f"Topic:\n {random.choice(starters)}")
 
 
 client.remove_command("help")
