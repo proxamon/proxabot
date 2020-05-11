@@ -67,7 +67,10 @@ async def help(ctx):
               "clear":"Deletes a specified number of messages",
               "hi":"Sends a friendly greeting",
               "kick":"Kicks a member",
-              "ban":"Bans a member"}
+              "ban":"Bans a member",
+              "choice":"Chooses an option from a supplied list separated by commas",
+              "topic":"Returns a question to start a discussion",
+              "roast":"Gives a roast"}
     embed= discord.Embed( colour = discord.Colour.blue())
     embed.set_author(name="Help")
     for x in commands:
