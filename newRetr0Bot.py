@@ -29,7 +29,7 @@ async def on_message(message):
 
 @client.command9)
 async def test(ctx):
-    await ctx.send("Test succesfull.")
+    await ctx.send("Test successfull.")
 
 @client.command()
 async def topic(ctx):
