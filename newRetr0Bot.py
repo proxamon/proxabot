@@ -27,6 +27,10 @@ async def on_message(message):
         #await message.channel.send(reply)
     await client.process_commands(message)
 
+@client.command9)
+async def test(ctx):
+    await ctx.send("Test succesfull.")
+
 @client.command()
 async def topic(ctx):
     starters=["What are the top three things on your bucket list?",
@@ -130,6 +134,8 @@ async def choice(ctx,*,string="True"):
         else:
             await ctx.send("My choice:")
             await ctx.send(random.choice(options).capitalize())
+
+
 
 @client.command(aliases=["8ball", "advice", "chance"])
 async def _8ball(ctx, *, question):
