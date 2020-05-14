@@ -27,7 +27,7 @@ async def on_message(message):
         #await message.channel.send(reply)
     await client.process_commands(message)
 
-@client.command9)
+@client.command()
 async def test(ctx):
     await ctx.send("Test successfull.")
 
