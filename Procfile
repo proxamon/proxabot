@@ -1,1 +1,1 @@
-worker: python newRetr0Bot.py
+worker: python ProxaBot.py
