@@ -111,6 +111,10 @@ async def roast(ctx):
         await ctx.send(chosenOne)
 
 @client.command()
+async def github(ctx):
+    await ctx.send("https://github.com/proxamon/proxabot")
+
+@client.command()
 async def ping(ctx):
     await ctx.send(f"Pong! {round(client.latency * 1000)}ms")
 
