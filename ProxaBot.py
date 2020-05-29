@@ -74,7 +74,8 @@ async def help(ctx):
               "ban":"Bans a member",
               "choice":"Chooses an option from a supplied list separated by commas",
               "topic":"Returns a question to start a discussion",
-              "roast":"Gives a roast"}
+              "roast":"Gives a roast",
+              "github":"Sends a link to the source code"}
     embed= discord.Embed( colour = discord.Colour.blue())
     embed.set_author(name="Help")
     for x in commands:
