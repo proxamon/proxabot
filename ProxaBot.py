@@ -25,7 +25,10 @@ async def on_message(message):
     #elif "thank" in str(message.content.lower()) and not(message.author == client.user):
         #reply=random.choice(responses2)
         #await message.channel.send(reply)
+    if random.randint(0, 10)==7:
+        await ctx.send("Pokemon Spawned")
     await client.process_commands(message)
+
 
 @client.command()
 async def test(ctx):
