@@ -26,7 +26,7 @@ async def on_message(message):
         #reply=random.choice(responses2)
         #await message.channel.send(reply)
     if random.randint(0, 10)==7:
-        await ctx.send("Pokemon Spawned")
+        await message.channel.send("Pokemon Spawned")
     await client.process_commands(message)
 
 
