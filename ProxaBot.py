@@ -34,6 +34,10 @@ async def on_message(message):
 async def test(ctx):
     await ctx.send("Test successfull.")
 
+@client.command(aliases = ["reeee", "ree", "reeeee"])
+async def reee(ctx):
+    await ctx.send("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+
 @client.command()
 async def topic(ctx):
     starters=["What are the top three things on your bucket list?",
