@@ -68,7 +68,7 @@ async def hort(ctx):
 
 @client.command()
 async def randomnumber(ctx, *, limit=10):
-    await ctx.send(random.randint(limit))
+    await ctx.send(random.randint(0,limit))
 
 
 client.remove_command("help")
