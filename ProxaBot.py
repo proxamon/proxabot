@@ -61,6 +61,15 @@ async def topic(ctx):
               "What keeps you up at night?"]
     await ctx.send(f"Topic:\n {random.choice(starters)}")
 
+@client.command()
+async def hort(ctx):
+    options = ["heads", "tails", "edge"]
+    await ctx.send(random.choice(options))
+
+@client.command()
+async def randomnumber(ctx, *, limit=10):
+    await ctx.send(random.randint(limit))
+
 
 client.remove_command("help")
 
@@ -83,6 +92,8 @@ async def help(ctx):
               "topic":"Returns a question to start a discussion",
               "roast":"Gives a roast",
               "github":"Sends a link to the source code",
+              "hort": "Heads or Tails",
+              "randomnumber": "Generate a random-ish number up to the limit specified or (if no limit) 10",
               "ree": "You already know what this does."}
     embed= discord.Embed( colour = discord.Colour.blue())
     embed.set_author(name="Help")
