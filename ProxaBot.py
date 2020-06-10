@@ -73,7 +73,7 @@ async def topic(ctx):
 async def countdown(ctx, number=3):
     try:
         number=int(number)
-        for x in range(0,number,-1):
+        for x in range(number,0,-1):
             await ctx.send(x)
             time.sleep(1)
         await ctx.send("Surprise!")
