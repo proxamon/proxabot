@@ -70,6 +70,17 @@ async def topic(ctx):
     await ctx.send(f"Topic:\n {random.choice(starters)}")
 
 @client.command()
+async def countdown(ctx, number=3):
+    try:
+        number=int(number)
+        for x in range(0,number,-1):
+            await ctx.send(x)
+            time.sleep(1)
+        await ctx.send("Surprise!")
+    except ValueError:
+        await ctx.send("The command should be used with a number to countdown from or the default value is 3.")
+
+@client.command()
 async def hort(ctx):
     options = ["heads", "tails", "edge"]
     await ctx.send(random.choice(options))
