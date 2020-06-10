@@ -39,6 +39,14 @@ async def reee(ctx):
     await ctx.send("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
 
 @client.command()
+async def save(ctx):
+    number = random.randint(0,10)
+    if number>8:
+        await ctx.send("You have been saved.")
+    else:
+        await ctx.send("Leave me alone, I have better things to do.")
+
+@client.command()
 async def topic(ctx):
     starters=["What are the top three things on your bucket list?",
               "How do you think you will die?",
