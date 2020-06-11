@@ -247,6 +247,26 @@ async def clear(ctx, number=5):
 async def kick(ctx, member : discord.Member, * , reason = None):
     await member.kick(reason=reason)
 
+@client.command()
+@commands.has_permissions(ban_members=True)
+async def unban(ctx, *, member):
+    flag=False
+    if "#" in member:
+        bannedPeople=await ctx.guild.bans()
+        memberName, memberDiscriminator = member.split("#")
+
+        for banEntry in bannedPeople:
+            user=banEntry.user
+            if (user.name, user.discriminator)==(memberName, memberDiscriminator):
+                await ctx.unban(user)
+                await ctx.send(f"{user.name} has been unbanned.")
+                flag=True
+        if not flag:
+            await ctx.send("That person does not exist in the list of banned people.")
+    else:
+        await ctx.send("Please type the command followed by the username and numberid of the user")
+        await ctx.send("For example, $unban person#1234 ")
+
 
 
 @client.command()
