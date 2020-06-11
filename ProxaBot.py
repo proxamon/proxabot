@@ -14,6 +14,7 @@ client=commands.Bot(command_prefix="$")
 @client.event
 async def on_ready():
     print("Bot is ready")
+    await client.change_presence(activity = discord.Game("$help"))
 
 @client.event
 async def on_message(message):
@@ -246,6 +247,7 @@ async def clear(ctx, number=5):
 @commands.has_permissions(kick_members=True)
 async def kick(ctx, member : discord.Member, * , reason = None):
     await member.kick(reason=reason)
+    await ctx.send(f"Banned {member.name}")
 
 @client.command()
 @commands.has_permissions(ban_members=True)
@@ -258,7 +260,7 @@ async def unban(ctx, *, member):
         for banEntry in bannedPeople:
             user=banEntry.user
             if (user.name, user.discriminator)==(memberName, memberDiscriminator):
-                await ctx.unban(user)
+                await ctx.guild.unban(user)
                 await ctx.send(f"{user.name} has been unbanned.")
                 flag=True
         if not flag:
