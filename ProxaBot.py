@@ -250,7 +250,8 @@ async def clear(ctx, number=5):
 @commands.has_permissions(kick_members=True)
 async def kick(ctx, member : discord.Member, * , reason = None):
     await member.kick(reason=reason)
-    await ctx.send(f"Banned {member.name}")
+    await ctx.send(f"Kicked {member.name}")
+
 
 @client.command()
 @commands.has_permissions(ban_members=True)
@@ -278,6 +279,6 @@ async def unban(ctx, *, member):
 @commands.has_permissions(ban_members=True)
 async def ban(ctx, member : discord.Member, * , reason = None):
     await member.ban(reason=reason)
-
+    await ctx.send(f"Banned {member.name}")
 
 client.run(TOKEN)
