@@ -73,11 +73,14 @@ async def topic(ctx):
 @client.command()
 async def countdown(ctx, number=3):
     try:
-        number=int(number)
-        for x in range(number,0,-1):
-            await ctx.send(x)
-            time.sleep(1)
-        await ctx.send("Surprise!")
+        if number<60:
+            number=int(number)
+            for x in range(number,0,-1):
+                await ctx.send(x)
+                time.sleep(1)
+            await ctx.send("Surprise!")
+        else:
+            await ctx.send("The maximum is 60.")
     except ValueError:
         await ctx.send("The command should be used with a number to countdown from or the default value is 3.")
 
