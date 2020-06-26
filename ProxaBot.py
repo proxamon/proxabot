@@ -144,7 +144,8 @@ async def help(ctx):
               "hort": "Heads or Tails",
               "randomnumber": "Generate a random-ish number up to the limit specified or (if no limit) 10",
               "ree": "You already know what this does.",
-              "therapy": "Grants **amazing** therapy to anyone mentioned or the sender, if no one is mentioned."}
+              "therapy": "Grants **amazing** therapy to anyone mentioned or the sender, if no one is mentioned.",
+              "crusade": "Crusades against a mentioned foe of God."}
     embed= discord.Embed( colour = discord.Colour.blue())
     embed.set_author(name="Help")
     for x in commands:
