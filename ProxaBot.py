@@ -4,12 +4,19 @@ from discord.ext import commands
 import os
 from dotenv import load_dotenv
 import time
+import praw
 
 load_dotenv()
 TOKEN=os.getenv("DISCORD_TOKEN")
-
+redditClientID=os.getenv("CLIENT_ID")
+redditClientSecret=os.getenv("CLIENT_SECRET")
+redditUserAgent=os.getenv("USER_AGENT")
 
 client=commands.Bot(command_prefix="$")
+
+reddit = praw.Reddit(client_id=redditClientID, client_secret=redditClientSecret, user_agent=redditUserAgent)
+
+print(reddit.read_only)
 
 @client.event
 async def on_ready():
@@ -30,6 +37,29 @@ async def on_message(message):
     #    await message.channel.send("Pokemon Spawned")
     await client.process_commands(message)
 
+def fetchMeme(ctx, subreddit):
+    author=ctx.message.author
+    randPost=reddit.subreddit(subreddit).random()
+    url=randPost.url
+    embed= discord.Embed(colour = discord.Colour.blue())
+    embed.set_author(name=f"Meme from r/{subreddit}")
+    embed.set_image(url=url)
+    return author, embed
+
+@client.command()
+async def dankmeme(ctx):
+    author, embed = fetchMeme(ctx, "dankmemes")
+    await ctx.send(author, embed=embed)
+
+@client.command()
+async def wholesome(ctx):
+    author, embed = fetchMeme(ctx, "wholesomememes")
+    await ctx.send(author, embed=embed)
+
+@client.command()
+async def meme(ctx):
+    author, embed = fetchMeme(ctx, "memes")
+    await ctx.send(author, embed=embed)
 
 @client.command()
 async def therapy(ctx, member: discord.Member = None):
