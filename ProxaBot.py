@@ -296,10 +296,7 @@ async def spam(ctx,*,string):
 
 @client.command()
 async def reverse(ctx, *, string):
-    reversedString=""
-    for x in string[::-1]:
-        reversedString+=x
-    await ctx.send(reversedString)
+    await ctx.send(string[::-1])
 
 @client.command()
 @commands.has_permissions(manage_messages=True)
