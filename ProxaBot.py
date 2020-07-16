@@ -295,6 +295,13 @@ async def spam(ctx,*,string):
         await ctx.send("For example, '$spam 10 I am a bot.'")
 
 @client.command()
+async def reverse(ctx, *, string):
+    reversedString=""
+    for x in string[::-1]:
+        reversedString+=x
+    await ctx.send(reversedString)
+
+@client.command()
 @commands.has_permissions(manage_messages=True)
 async def clear(ctx, number=5):
     if number<=20:
