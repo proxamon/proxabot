@@ -27,7 +27,7 @@ async def on_ready():
 async def on_message(message):
     responses1=["Still you","https://www.youtube.com/watch?v=TyfNZs2dPto", "ur dad", "It's not me, it's youuuuu.", "no u.", "uno reverse", "ur face", "don't be a cuck", "undoubtedly u" ]
     responses2=["The pleasure's all mine.", "No problem!", "You are very welcome.", "At least someone says thank you.", "Your gratitude is much appreciated.", "There's no need to thank me."]
-    if "no u" in str(message.content.lower()) and not(message.author == client.user):
+    if ("no u " in str(message.content.lower()) and not(message.author == client.user)) or (str(message.content.lower())=="no u"):
         reply=random.choice(responses1)
         await message.channel.send(reply)
     #elif "thank" in str(message.content.lower()) and not(message.author == client.user):
@@ -45,6 +45,12 @@ def fetchMeme(ctx, subreddit):
     embed.set_author(name=f"Meme from r/{subreddit}")
     embed.set_image(url=url)
     return author, embed
+
+'''@client.command()
+async def send_dm(ctx, member: discord.Member):
+    channel = await member.create_dm()
+    while True:
+        await channel.send("This is spam.")'''
 
 @client.command()
 async def dankmeme(ctx):
