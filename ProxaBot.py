@@ -39,7 +39,7 @@ async def on_message(message):
         #await message.channel.send(reply)
     #if random.randint(0, 10)==7:
     #    await message.channel.send("Pokemon Spawned")
-    if message.author.id==284738961631608832 and random.randint(1, 10)>8:
+    if message.author.id==284738961631608832 and random.randint(1, 100)>65:
         await message.channel.send(message.content)
 
     await client.process_commands(message)
