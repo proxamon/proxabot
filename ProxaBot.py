@@ -25,8 +25,12 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    responses1=["Still you","https://www.youtube.com/watch?v=TyfNZs2dPto", "ur dad", "It's not me, it's youuuuu.", "no u.", "uno reverse", "ur face", "don't be a cuck", "undoubtedly u" ]
-    responses2=["The pleasure's all mine.", "No problem!", "You are very welcome.", "At least someone says thank you.", "Your gratitude is much appreciated.", "There's no need to thank me."]
+    responses1=["Still you","https://www.youtube.com/watch?v=TyfNZs2dPto",
+                "ur dad", "It's not me, it's youuuuu.", "no u.", "uno reverse",
+                "ur face", "don't be a cuck", "undoubtedly u" ]
+    responses2=["The pleasure's all mine.", "No problem!",
+                "You are very welcome.", "At least someone says thank you.",
+                "Your gratitude is much appreciated.", "There's no need to thank me."]
     if ("no u " in str(message.content.lower()) and not(message.author == client.user)) or (str(message.content.lower())=="no u"):
         reply=random.choice(responses1)
         await message.channel.send(reply)
@@ -79,10 +83,16 @@ async def therapy(ctx, member: discord.Member = None):
 
 @client.command()
 async def crusade(ctx, member: discord.Member = None):
-    bibleVerses = ["Again Jesus said, 'Peace be with you! As the Father has sent me, I am sending you.'", "We are witnesses of these things, and so is the Holy Spirit, whom God has given to those who obey him.", "Therefore, my dear brothers and sisters, stand firm. Let nothing move you. Always give yourselves fully to the work of the Lord, because you know that your labor in the Lord is not in vain.",
-    "It is the Lord your God you must follow, and him you must revere. Keep his commands and obey him; serve him and hold fast to him.", "In the same way, the Spirit helps us in our weakness. We do not know what we ought to pray for, but the Spirit himself intercedes for us through wordless groans.", "Come near to God and he will come near to you. Wash your hands, you sinners, and purify your hearts, you double-minded.",
-    "But when you ask, you must believe and not doubt, because the one who doubts is like a wave of the sea, blown and tossed by the wind.", "Surely God is my help; the Lord is the one who sustains me.", "Keep this Book of the Law always on your lips; meditate on it day and night, so that you may be careful to do everything written in it. Then you will be prosperous and successful.",
-    "For he is God's servant for your good. But if you do wrong, be afraid, for he does not bear the sword in vain. For he is the servant of God, an avenger who carries out God's wrath on the wrongdoer.", "But as for these enemies of mine, who did not want me to reign over them, bring them here and slaughter them before me."]
+    bibleVerses = ["Again Jesus said, 'Peace be with you! As the Father has sent me, I am sending you.'",
+                   "We are witnesses of these things, and so is the Holy Spirit, whom God has given to those who obey him.",
+                   "Therefore, my dear brothers and sisters, stand firm. Let nothing move you. Always give yourselves fully to the work of the Lord, because you know that your labor in the Lord is not in vain.",
+                   "It is the Lord your God you must follow, and him you must revere. Keep his commands and obey him; serve him and hold fast to him.",
+                   "In the same way, the Spirit helps us in our weakness. We do not know what we ought to pray for, but the Spirit himself intercedes for us through wordless groans.",
+                   "Come near to God and he will come near to you. Wash your hands, you sinners, and purify your hearts, you double-minded.",
+                   "But when you ask, you must believe and not doubt, because the one who doubts is like a wave of the sea, blown and tossed by the wind.",
+                   "Surely God is my help; the Lord is the one who sustains me.", "Keep this Book of the Law always on your lips; meditate on it day and night, so that you may be careful to do everything written in it. Then you will be prosperous and successful.",
+                   "For he is God's servant for your good. But if you do wrong, be afraid, for he does not bear the sword in vain. For he is the servant of God, an avenger who carries out God's wrath on the wrongdoer.",
+                   "But as for these enemies of mine, who did not want me to reign over them, bring them here and slaughter them before me."]
     if member!=None:
         await ctx.send("Opening Bible...")
         time.sleep(0.5)
