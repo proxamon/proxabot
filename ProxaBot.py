@@ -82,6 +82,15 @@ async def therapy(ctx, member: discord.Member = None):
         await ctx.send("You are beyond even my help.")
 
 @client.command()
+async def join(ctx):
+        channel = ctx.author.voice.channel
+        await channel.connect()
+
+@client.command()
+async def leave(ctx):
+    await ctx.voice_client.disconnect()
+
+@client.command()
 async def crusade(ctx, member: discord.Member = None):
     bibleVerses = ["Again Jesus said, 'Peace be with you! As the Father has sent me, I am sending you.'",
                    "We are witnesses of these things, and so is the Holy Spirit, whom God has given to those who obey him.",
