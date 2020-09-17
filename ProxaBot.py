@@ -11,6 +11,7 @@ TOKEN=os.getenv("DISCORD_TOKEN")
 redditClientID=os.getenv("CLIENT_ID")
 redditClientSecret=os.getenv("CLIENT_SECRET")
 redditUserAgent=os.getenv("USER_AGENT")
+muteRole = ""
 
 client=commands.Bot(command_prefix="$")
 
@@ -203,7 +204,10 @@ async def help(ctx):
               "randomnumber": "Generate a random-ish number up to the limit specified or (if no limit) 10",
               "ree": "You already know what this does.",
               "therapy": "Grants **amazing** therapy to anyone mentioned or the sender, if no one is mentioned.",
-              "crusade": "Crusades against a mentioned foe of God."}
+              "crusade": "Crusades against a mentioned foe of God.",
+              "muterole": "Sets the mentioned role as the role to be assigned when someone is muted.",
+              "mute": "Assigns the \"mute\" role to a mentioned person",
+              "unmute": "Removes the \"mute\" role from a mentioned person."}
     embed= discord.Embed( colour = discord.Colour.blue())
     embed.set_author(name="Help")
     for x in commands:
@@ -302,7 +306,7 @@ async def _8ball(ctx, *, question):
 
 @client.command(aliases = ["hello", "Hi", "Hey", "Hello", "hey"])
 async def hi(ctx):
-    if ctx.message.author.display_name == "Retr0fade":
+    if ctx.message.author.display_name == "Proxamon":
         await ctx.send("Hello, creator.")
     else:
         await ctx.send(f'Hello there, {ctx.message.author.display_name}')
@@ -370,5 +374,25 @@ async def unban(ctx, *, member):
 async def ban(ctx, member : discord.Member, * , reason = None):
     await member.ban(reason=reason)
     await ctx.send(f"Banned {member.name}")
+
+@client.command(aliases = ["muterole", "setmuterole", "MuteRole"])
+async def setMuteRole(ctx, role : discord.Role):
+    global muteRole
+    muteRole = role
+    await ctx.send(f"Set Mute Role to {role.mention}")
+
+@client.command()
+@commands.has_permissions(manage_roles=True)
+async def mute(ctx, member : discord.Member, *, reason = "LUL"):
+    await member.add_roles(muteRole)
+    await ctx.send(f"Muted {member.mention}")
+
+@client.command()
+@commands.has_permissions(manage_roles=True)
+async def unmute(ctx, member : discord.Member, *, reason = "LUL"):
+    await member.remove_roles(muteRole)
+    await ctx.send(f"Unmuted {member.mention}")
+
+
 
 client.run(TOKEN)
