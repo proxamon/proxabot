@@ -1,29 +1,33 @@
-import discord
-import random
+import discord, random, time, praw, os
 from discord.ext import commands
-import os
 from dotenv import load_dotenv
-import time
-import praw
 
+#This loads in some secret variables for the connections to discord API and reddit API
 load_dotenv()
 TOKEN=os.getenv("DISCORD_TOKEN")
 redditClientID=os.getenv("CLIENT_ID")
 redditClientSecret=os.getenv("CLIENT_SECRET")
 redditUserAgent=os.getenv("USER_AGENT")
-muteRole = ""
 
+#This initialises the bot with the prefix "$"
 client=commands.Bot(command_prefix="$")
 
+#This creates a variable that stores the connection to reddit's API
 reddit = praw.Reddit(client_id=redditClientID, client_secret=redditClientSecret, user_agent=redditUserAgent)
 
-print(reddit.read_only)
+#This is a class for the muteRole because I was dum when making the mute functions.
+class muteRole:
+    def __init__(self, id):
+        self.id = id
 
+#This is just a short event that runs when the bot connects. It will print out "Bot is ready", for when I'm debugging, and also set its status to "$help"
 @client.event
 async def on_ready():
     print("Bot is ready")
     await client.change_presence(activity = discord.Game("$help"))
 
+#This is a simple "no u" response function because my sense of comedy as well as my sense of self is slowly deteriorating, please send help.
+#I'm just kidding of course.
 @client.event
 async def on_message(message):
     responses1=["Still you","https://www.youtube.com/watch?v=TyfNZs2dPto",
@@ -45,6 +49,7 @@ async def on_message(message):
 
     await client.process_commands(message)
 
+#This is a short function to simplify and tidy up the "$meme", "$dankmeme" and "$wholesome" commands
 def fetchMeme(ctx, subreddit):
     author=ctx.message.author
     randPost=reddit.subreddit(subreddit).random()
@@ -54,27 +59,33 @@ def fetchMeme(ctx, subreddit):
     embed.set_image(url=url)
     return author, embed
 
+#This is a blocked command I made when I wanted to spam my friend's dms.
+#UPDATE: He is not my friend anymore XD
 '''@client.command()
 async def send_dm(ctx, member: discord.Member):
     channel = await member.create_dm()
     while True:
         await channel.send("This is spam.")'''
 
+#This is a command to fetch a meme from r/dankmemes
 @client.command()
 async def dankmeme(ctx):
     author, embed = fetchMeme(ctx, "dankmemes")
     await ctx.send(author, embed=embed)
 
+#This is the same as above but for r/wholesomememes
 @client.command()
 async def wholesome(ctx):
     author, embed = fetchMeme(ctx, "wholesomememes")
     await ctx.send(author, embed=embed)
 
+#Same as above but for r/memes
 @client.command()
 async def meme(ctx):
     author, embed = fetchMeme(ctx, "memes")
     await ctx.send(author, embed=embed)
 
+#This is a completely dumb command for when someone asks for help.
 @client.command()
 async def therapy(ctx, member: discord.Member = None):
     if member != None:
@@ -82,15 +93,19 @@ async def therapy(ctx, member: discord.Member = None):
     else:
         await ctx.send("You are beyond even my help.")
 
+#This command allows my bot to join voice channels.
+#Initially, I was planning to develop this, but then I just decided to use it to cope with loneliness.
 @client.command()
 async def join(ctx):
         channel = ctx.author.voice.channel
         await channel.connect()
 
+#This is for trolling ProxaBot
 @client.command()
 async def leave(ctx):
     await ctx.voice_client.disconnect()
 
+#This command allows me to crusade against someone when they do something unholy.
 @client.command()
 async def crusade(ctx, member: discord.Member = None):
     bibleVerses = ["Again Jesus said, 'Peace be with you! As the Father has sent me, I am sending you.'",
@@ -116,6 +131,7 @@ async def crusade(ctx, member: discord.Member = None):
     else:
         await ctx.send("Brethren, we cannot crusade without a foe. That would be against the will of God.")
 
+#This was for when I was adding verification to a server and didn't want to go through and manually give everyone the "verified" role.
 '''@client.command()
 async def massroleassign(ctx):
     if ctx.message.author.name == "Proxamon":
@@ -123,15 +139,17 @@ async def massroleassign(ctx):
             await member.add_roles(discord.utils.get(ctx.guild.roles, name="verified"))'''
 
 
-
+#I don't even know what this is for. Also, fun fact: I initially spelt "successful" wrong for this command.
 @client.command()
 async def test(ctx):
-    await ctx.send("Test successfull.")
+    await ctx.send("Test successful.")
 
+#This command just sends "reee"
 @client.command(aliases = ["reeee", "ree", "reeeee"])
 async def reee(ctx):
     await ctx.send("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
 
+#This is a command that has a 20% chance of saving someone
 @client.command()
 async def save(ctx):
     number = random.randint(0,10)
@@ -140,6 +158,7 @@ async def save(ctx):
     else:
         await ctx.send("Leave me alone, I have better things to do.")
 
+#This is... well, you know why I made this.
 @client.command()
 async def topic(ctx):
     starters=["What are the top three things on your bucket list?",
@@ -163,6 +182,7 @@ async def topic(ctx):
               "What keeps you up at night?"]
     await ctx.send(f"Topic:\n {random.choice(starters)}")
 
+#Happy Birthday, I guess?
 @client.command()
 async def countdown(ctx, number=3):
     try:
@@ -177,51 +197,41 @@ async def countdown(ctx, number=3):
     except ValueError:
         await ctx.send("The command should be used with a number to countdown from or the default value is 3.")
 
+#For settling Among Us arguments.
 @client.command()
 async def hort(ctx):
     options = ["heads", "tails", "edge"]
     await ctx.send(random.choice(options))
 
+#This is for when I need a random number and cba to use google.
 @client.command()
 async def randomnumber(ctx, *, limit=10):
     await ctx.send(random.randint(0,limit))
 
-
+#This allows me to write my own help command.
 client.remove_command("help")
 
+#heh.
 @client.command()
 async def hit(ctx):
     await ctx.send("Watch Yo Profanity!")
 
+#This is a very messy and unorganised implementation of the help command.
+#Actually... lemme shift all of this dictionary into a separate file.
 @client.command()
 async def help(ctx):
     author=ctx.message.author
-    commands={"ping":" Returns the latency",
-              "8ball":"Returns advice for the question supplied.",
-              "spam":"Types an inputted string of text an inputted number of times.",
-              "choice":"Chooses an option from a provided list.",
-              "clear":"Deletes a specified number of messages",
-              "hi":"Sends a friendly greeting",
-              "kick":"Kicks a member",
-              "ban":"Bans a member",
-              "choice":"Chooses an option from a supplied list separated by commas",
-              "topic":"Returns a question to start a discussion",
-              "roast":"Gives a roast",
-              "github":"Sends a link to the source code",
-              "hort": "Heads or Tails",
-              "randomnumber": "Generate a random-ish number up to the limit specified or (if no limit) 10",
-              "ree": "You already know what this does.",
-              "therapy": "Grants **amazing** therapy to anyone mentioned or the sender, if no one is mentioned.",
-              "crusade": "Crusades against a mentioned foe of God.",
-              "muterole": "Sets the mentioned role as the role to be assigned when someone is muted.",
-              "mute": "Assigns the \"mute\" role to a mentioned person",
-              "unmute": "Removes the \"mute\" role from a mentioned person."}
     embed= discord.Embed( colour = discord.Colour.blue())
     embed.set_author(name="Help")
-    for x in commands:
-        embed.add_field(name=f"${x}", value=commands[x], inline=False)
+
+    with open("botData/commands.txt", "r") as file:
+        for line in file:
+            command, helpText = line.strip(",\n").replace("\"", "").split(":")
+            embed.add_field(name=f"${command}", value=helpText, inline=False)
+    
     await ctx.send(author, embed=embed)
 
+#This is for when someone has 0 brain cells, but needs to defend themselves.
 @client.command()
 async def roast(ctx):
     roasts=["You’re the reason God created the middle finger.",
@@ -251,14 +261,17 @@ async def roast(ctx):
     else:
         await ctx.send(chosenOne)
 
+#Always be plugging.
 @client.command()
 async def github(ctx):
     await ctx.send("https://github.com/proxamon/proxabot")
 
+#Curiosity, I guess...
 @client.command()
 async def ping(ctx):
     await ctx.send(f"Pong! {round(client.latency * 1000)}ms")
 
+#This is for me being a dumb donkey who can't make decisions.
 @client.command(aliases=["choose"])
 async def choice(ctx,*,string="True"):
     if string=="True":
@@ -281,7 +294,7 @@ async def choice(ctx,*,string="True"):
             await ctx.send(random.choice(options).capitalize())
 
 
-
+#Same as choice but for advice.
 @client.command(aliases=["8ball", "advice", "chance"])
 async def _8ball(ctx, *, question):
     responses=["It is certain.",
@@ -312,6 +325,7 @@ async def _8ball(ctx, *, question):
                  "You need Jesus for that."]
     await ctx.send(f'Question: {question}\nAnswer: {random.choice(responses)}')
 
+#Lonelyyyyyyy.... I'm Mr Lonellyyyyyy.... I have nobodyyyyyyyy... ooofffff my ooooowwwWWNNNN..
 @client.command(aliases = ["hello", "Hi", "Hey", "Hello", "hey"])
 async def hi(ctx):
     if ctx.message.author.name == "Proxamon":
@@ -319,7 +333,7 @@ async def hi(ctx):
     else:
         await ctx.send(f'Hello there, {ctx.message.author.display_name}')
 
-
+#This just repeats a message a given number of times, up to 20. For some reason it does it in groups of 5, I don't know.
 @client.command()
 @commands.has_permissions(manage_messages=True)
 async def spam(ctx,*,string):
@@ -334,10 +348,12 @@ async def spam(ctx,*,string):
         await ctx.send("Format for spam: Command, number of times to spam, string to spam.")
         await ctx.send("For example, '$spam 10 I am a bot.'")
 
+#Pretty simple, just reverses a string.
 @client.command()
 async def reverse(ctx, *, string):
     await ctx.send(string[::-1])
 
+#Deletes a given number of messages, default 5, maximum 20
 @client.command()
 @commands.has_permissions(manage_messages=True)
 async def clear(ctx, number=5):
@@ -348,13 +364,14 @@ async def clear(ctx, number=5):
     else:
         await ctx.send("Invalid number of messages.")
 
+#Kicks people.
 @client.command()
 @commands.has_permissions(kick_members=True)
 async def kick(ctx, member : discord.Member, * , reason = None):
     await member.kick(reason=reason)
     await ctx.send(f"Kicked {member.name}")
 
-
+#Unbans people. I don't know why I wrote this before ban but oh well.
 @client.command()
 @commands.has_permissions(ban_members=True)
 async def unban(ctx, *, member):
@@ -376,31 +393,75 @@ async def unban(ctx, *, member):
         await ctx.send("For example, $unban person#1234 ")
 
 
-
+#Bans people.
 @client.command()
 @commands.has_permissions(ban_members=True)
 async def ban(ctx, member : discord.Member, * , reason = None):
     await member.ban(reason=reason)
     await ctx.send(f"Banned {member.name}")
 
+#Sets a role as the mute role so it can be used later on to mute people.
 @client.command(aliases = ["muterole", "setmuterole", "MuteRole"])
 async def setMuteRole(ctx, role : discord.Role):
-    global muteRole
-    muteRole = role
+
+    file = open("botData/muteRoles.txt", "r")
+    lines = file.readlines()
+    file.close()
+
+    file = open("botData/muteRoles.txt", "w")
+    for x in range(len(lines)):
+        try:
+            if (lines[x].strip().split(":"))[0]==str(ctx.guild.id):
+                del lines[x]
+        except:
+            pass
+    for line in lines:
+        file.write(line)
+    file.close()
+
+    file=open("botData/muteRoles.txt", "a")
+    file.write(f"{ctx.guild.id}:{role.id}\n")
+    file.close()
+
     await ctx.send(f"Set Mute Role to {role.mention}")
 
+#Assigns the aforementioned mute role to someone, to mute them.
 @client.command()
 @commands.has_permissions(manage_roles=True)
 async def mute(ctx, member : discord.Member, *, reason = "LUL"):
-    await member.add_roles(muteRole)
-    await ctx.send(f"Muted {member.mention}")
-
+    file = open("botData/muteRoles.txt", "r")
+    for line in file:
+        guildID, roleID = line.strip().split(":")
+        if guildID==str(ctx.guild.id):
+            muteRole1=muteRole(roleID)
+            break
+    file.close()
+    try:
+        await member.add_roles(muteRole1)
+        await ctx.send(f"Muted {member.mention}")
+    except UnboundLocalError:
+        await ctx.send(f"Sorry, you have not set a mute role yet.")
+        await ctx.send("Please set a role through $muterole <mentionTheRoleHere>")
+    
+#Removes the mute role from someone.
 @client.command()
 @commands.has_permissions(manage_roles=True)
 async def unmute(ctx, member : discord.Member, *, reason = "LUL"):
-    await member.remove_roles(muteRole)
-    await ctx.send(f"Unmuted {member.mention}")
-
+    file = open("botData/muteRoles.txt", "r")
+    for line in file:
+        guildID, roleID = line.strip().split(":")
+        print(guildID)
+        print(roleID)
+        if guildID==str(ctx.guild.id):
+            muteRole1=muteRole(roleID)
+            break
+    file.close()
+    try:
+        await member.remove_roles(muteRole1)
+        await ctx.send(f"Unmuted {member.mention}")
+    except UnboundLocalError:
+        await ctx.send(f"Sorry, you have not set a mute role yet.")
+        await ctx.send("Please set a role through $muterole <mentionTheRoleHere>")
 
 
 client.run(TOKEN)
