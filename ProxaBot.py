@@ -116,6 +116,14 @@ async def crusade(ctx, member: discord.Member = None):
     else:
         await ctx.send("Brethren, we cannot crusade without a foe. That would be against the will of God.")
 
+'''@client.command()
+async def massroleassign(ctx):
+    if ctx.message.author.name == "Proxamon":
+        for member in ctx.guild.members:
+            await member.add_roles(discord.utils.get(ctx.guild.roles, name="verified"))'''
+
+
+
 @client.command()
 async def test(ctx):
     await ctx.send("Test successfull.")
@@ -306,7 +314,7 @@ async def _8ball(ctx, *, question):
 
 @client.command(aliases = ["hello", "Hi", "Hey", "Hello", "hey"])
 async def hi(ctx):
-    if ctx.message.author.display_name == "Proxamon":
+    if ctx.message.author.name == "Proxamon":
         await ctx.send("Hello, creator.")
     else:
         await ctx.send(f'Hello there, {ctx.message.author.display_name}')
