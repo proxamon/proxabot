@@ -90,8 +90,6 @@ class Admin(commands.Cog):
         file = open("botData/muteRoles.txt", "r")
         for line in file:
             guildID, roleID = line.strip().split(":")
-            print(guildID)
-            print(roleID)
             if guildID==str(ctx.guild.id):
                 muteRole1=muteRole(roleID)
                 break
