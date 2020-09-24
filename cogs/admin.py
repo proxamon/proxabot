@@ -115,7 +115,7 @@ class Admin(commands.Cog):
             await ctx.send("Invalid number of messages.")
 
     #Kicks people.
-    @client.command()
+    @commands.command()
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, member : discord.Member, * , reason = None):
         await member.kick(reason=reason)
@@ -124,7 +124,7 @@ class Admin(commands.Cog):
     #Curiosity, I guess...
     @commands.command()
     async def ping(self, ctx):
-        await ctx.send(f"Pong! {round(client.latency * 1000)}ms")
+        await ctx.send(f"Pong! {round(self.client.latency * 1000)}ms")
 
 def setup(client):
     for command in commands.Cog.get_commands(Admin):

@@ -30,7 +30,7 @@ class Advice(commands.Cog):
                 await ctx.send(random.choice(options).capitalize())
 
     #Same as choice but for advice.
-    @client.command(aliases=["8ball", "advice", "chance"])
+    @commands.command(aliases=["8ball", "advice", "chance"])
     async def _8ball(self, ctx, *, question):
         responses=["It is certain.",
                     "It is decidedly so.",
@@ -67,7 +67,7 @@ class Advice(commands.Cog):
         await ctx.send(random.choice(options))
 
     #This is for when I need a random number and cba to use google.
-    @client.command()
+    @commands.command()
     async def randomnumber(self, ctx, *, limit=10):
         await ctx.send(random.randint(0,limit))       
 
