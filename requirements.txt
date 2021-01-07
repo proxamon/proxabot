@@ -10,7 +10,7 @@ gunicorn==20.0.4
 idna_ssl==1.1.0
 ipaddr==2.2.0
 keyring==21.2.0
-lxml==4.5.0
+lxml==4.6.2
 numpy==1.18.3
 ordereddict==1.1
 praw==7.1.0
