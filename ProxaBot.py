@@ -1,14 +1,28 @@
-import discord, random, time, praw, os, asyncio
+import discord, random, time, praw, os, asyncio, pyrebase
 from discord.ext import commands, tasks
 from dotenv import load_dotenv
-
 
 coinIsDrop = False
 numCoins = 0
 
-#This loads in some secret variables for the connections to discord API and reddit API
+#This loads in some secret variables for the connections to discord API and Firebase API
 load_dotenv()
 TOKEN=os.getenv("DISCORD_TOKEN")
+EMAIL=os.getenv("EMAIL_FIREBASE")
+PWORD_FIREBASE=os.getenv("PWORD_FIREBASE")
+GOOGLE_APPLICATION_CREDS=os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+
+config = {
+    "apiKey": "AIzaSyDtPkzN9bayRlhOEUpkz0e68bFITjU4Dsw",
+    "authDomain": "proxabot-data.firebaseapp.com",
+    "databaseURL": "https://proxabot-data.firebaseio.com",
+    "projectId": "proxabot-data",
+    "storageBucket": "proxabot-data.appspot.com",
+    "messagingSenderId": "307753301122",
+    "appId": "1:307753301122:web:5d9b4a4eef3faa42d1309b",
+    "measurementId": "G-BZQ4PP7W6W",
+    "serviceAccount": GOOGLE_APPLICATION_CREDS
+}
 
 #This initialises the bot with the prefix "$"
 client=commands.Bot(command_prefix="$")
@@ -25,7 +39,7 @@ async def coinDrop(message):
     await message.channel.send("You have 30 seconds!")
     coinIsDrop = True
     await asyncio.sleep(30)
-    coinIsDrop = False
+coinIsDrop = False
     
 
 #This is just a short event that runs when the bot connects. It will print out "Bot is ready", for when I'm debugging, and also set its status to "$help"
@@ -47,8 +61,7 @@ async def on_ready():
 #I'm just kidding of course.
 @client.event
 async def on_message(message):
-    global coinIsDrop
-    global numCoins
+
     found = False
     logData=[]
     responses1=["Still you","https://www.youtube.com/watch?v=TyfNZs2dPto",
@@ -68,6 +81,7 @@ async def on_message(message):
     #if message.author.id==284738961631608832 and random.randint(1, 100)>65:
         # await message.channel.send(message.content)
 
+    '''
     if random.randint(0,100)<5:
         await coinDrop(message)
 
@@ -75,12 +89,17 @@ async def on_message(message):
         print("SUCCESS")
         claimant = message.author
         await message.channel.send(f"Congratulations, {claimant.mention}, you won {numCoins}!")
+        firebase = pyrebase.initialize_app(config)
+        auth=firebase.auth()
+        firebaseStorage = firebase.storage()
+        firebaseStorage.child("botData/currency.txt").download("botData/currency.txt")
+        
         logs = open("botData/currency.txt", "r")
         for line in logs:
-            '''if (line.strip().split(":"))[0] == message.author.id:
+            if (line.strip().split(":"))[0] == message.author.id:
                 plrTotal = (line.strip().split(":"))[1]
                 found = True
-            logData.append(line)'''
+            logData.append(line)
 
             logData.append(line.strip().split(":"))
         logs.close()
@@ -100,8 +119,10 @@ async def on_message(message):
             except:
                 pass
         logs.close()
-        coinIsDrop = False
-        print(logData)
+        #user=auth.sign_in_with_email_and_password(EMAIL, PWORD_FIREBASE)
+        firebaseStorage.child("botData/currency.txt").put("botData/currency.txt")
+        coinIsDrop = False '''
+        
 
 
 
