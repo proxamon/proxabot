@@ -39,7 +39,7 @@ async def coinDrop(message):
     await message.channel.send("You have 30 seconds!")
     coinIsDrop = True
     await asyncio.sleep(30)
-coinIsDrop = False
+    coinIsDrop = False
     
 
 #This is just a short event that runs when the bot connects. It will print out "Bot is ready", for when I'm debugging, and also set its status to "$help"
@@ -81,47 +81,6 @@ async def on_message(message):
     #if message.author.id==284738961631608832 and random.randint(1, 100)>65:
         # await message.channel.send(message.content)
 
-    '''
-    if random.randint(0,100)<5:
-        await coinDrop(message)
-
-    if str(message.content.lower()) == "claim" and coinIsDrop == True:
-        print("SUCCESS")
-        claimant = message.author
-        await message.channel.send(f"Congratulations, {claimant.mention}, you won {numCoins}!")
-        firebase = pyrebase.initialize_app(config)
-        auth=firebase.auth()
-        firebaseStorage = firebase.storage()
-        firebaseStorage.child("botData/currency.txt").download("botData/currency.txt")
-        
-        logs = open("botData/currency.txt", "r")
-        for line in logs:
-            if (line.strip().split(":"))[0] == message.author.id:
-                plrTotal = (line.strip().split(":"))[1]
-                found = True
-            logData.append(line)
-
-            logData.append(line.strip().split(":"))
-        logs.close()
-        
-        for person in logData:
-            if int(person[0])==claimant.id:
-                claimantTotal=int(person[1])+numCoins
-                person[1]=claimantTotal
-                found=True
-        
-        if not found:
-            logData.append([f"{claimant.id}",f"{numCoins}"])
-        logs = open("botData/currency.txt", "w")
-        for line in logData:
-            try:
-                logs.write(f"{line[0]}:{line[1]}\n")
-            except:
-                pass
-        logs.close()
-        #user=auth.sign_in_with_email_and_password(EMAIL, PWORD_FIREBASE)
-        firebaseStorage.child("botData/currency.txt").put("botData/currency.txt")
-        coinIsDrop = False '''
         
 
 
