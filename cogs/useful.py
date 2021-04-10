@@ -1,6 +1,11 @@
-import discord, random, time, praw, os
+import discord, random, time, praw, os, requests
 from discord.ext import commands
 from dotenv import load_dotenv
+
+#Variables to be used in the roast command
+roastSource = "https://pastebin.com/raw/HCMHrihv"
+roasts = requests.get(roastSource)
+listOfRoasts = [m[:-2] for m in roasts.text.split("\n")]
 
 class Useful(commands.Cog):
 
@@ -26,32 +31,9 @@ class Useful(commands.Cog):
     #This is for when someone has 0 brain cells, but needs to defend themselves.
     @commands.command()
     async def roast(self, ctx):
-        roasts=["You’re the reason God created the middle finger.",
-                "You’re a grey sprinkle on a rainbow cupcake.",
-                "If your brain was dynamite, there wouldn’t be enough to blow your hat off.",
-                "You are more disappointing than an unsalted pretzel.",
-                "Light travels faster than sound which is why you seemed bright until you spoke.",
-                "You're so annoying, you make your Happy Meal cry.",
-                "You have so many gaps in your teeth it looks like your tongue is in jail.",
-                "Your secrets are always safe with me. I never even listen when you tell me them.",
-                "I’ll never forget the first time we met. But I’ll keep trying.",
-                "I forgot the world revolves around you. My apologies, how silly of me.",
-                "I only take you everywhere I go just so I don’t have to kiss you goodbye.",
-                "Hold still. I’m trying to imagine you with personality.",
-                "Your face makes onions cry.",
-                "It’s impossible to underestimate you.",
-                "I’m not a nerd, I’m just smarter than you.",
-                "Keep rolling your eyes, you might eventually find a brain.",
-                "Your face is just fine but we’ll have to put a bag over that personality.",
-                "You bring everyone so much joy, when you leave the room."]
-        chosenOne=random.choice(roasts)
-        if chosenOne=="You bring everyone so much joy, when you leave the room.":
-            chosenOne=chosenOne.split(",")
-            for x in chosenOne:
-                await ctx.send(x)
-                time.sleep(1)
-        else:
-            await ctx.send(chosenOne)
+        
+        chosenOne=random.choice(listOfRoasts)
+        await ctx.send(chosenOne)
 
     #This is... well, you know why I made this.
     @commands.command()

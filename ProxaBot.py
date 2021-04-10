@@ -1,4 +1,4 @@
-import discord, random, time, praw, os, asyncio, pyrebase
+import discord, random, time, praw, os, asyncio, pyrebase, requests
 from discord.ext import commands, tasks
 from dotenv import load_dotenv
 
@@ -43,6 +43,7 @@ async def coinDrop(message):
     
 
 #This is just a short event that runs when the bot connects. It will print out "Bot is ready", for when I'm debugging, and also set its status to "$help"
+#It also loads all the functions of the bot from the other files.
 @client.event
 async def on_ready():
     for file in os.listdir("./cogs"):
@@ -67,9 +68,6 @@ async def on_message(message):
     responses1=["Still you","https://www.youtube.com/watch?v=TyfNZs2dPto",
                 "ur dad", "It's not me, it's youuuuu.", "no u.", "uno reverse",
                 "ur face", "undoubtedly u" ]
-    responses2=["The pleasure's all mine.", "No problem!",
-                "You are very welcome.", "At least someone says thank you.",
-                "Your gratitude is much appreciated.", "There's no need to thank me."]
     if ("no u " in str(message.content.lower()) and not(message.author == client.user)) or (str(message.content.lower())=="no u"):
         reply=random.choice(responses1)
         await message.channel.send(reply)
