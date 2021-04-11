@@ -75,7 +75,7 @@ pycparser==2.20
 pycryptodome==3.4.3
 pyelftools==0.26
 pyfiglet==0.8.post1
-Pygments==2.7.2
+Pygments==2.7.4
 PyInstaller==3.6
 PyJWT==1.7.1
 pymongo==3.10.1
