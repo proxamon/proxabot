@@ -9,7 +9,7 @@ class DropCmds(commands.Cog):
 
 
     #This is a blocked command I made when I wanted to spam my friend's dms.
-    #UPDATE: He is not my friend anymore XD
+    #UPDATE: He is not my friend anymore 
     '''@commands.command()
     async def send_dm(ctx, member: discord.Member):
         channel = await member.create_dm()

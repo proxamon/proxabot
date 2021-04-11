@@ -82,6 +82,9 @@ class Admin(commands.Cog):
         except UnboundLocalError:
             await ctx.send(f"Sorry, you have not set a mute role yet.")
             await ctx.send("Please set a role through $muterole <mentionTheRoleHere>")
+        except Exception as e:
+            await ctx.send(e)
+
 
     #Removes the mute role from someone.
     @commands.command()

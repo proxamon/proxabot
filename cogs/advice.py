@@ -63,7 +63,7 @@ class Advice(commands.Cog):
     #For settling Among Us arguments.
     @commands.command()
     async def hort(self, ctx):
-        options = ["heads", "tails", "edge"]
+        options = ["heads", "heads","heads","tails", "tails", "tails", "edge"]
         await ctx.send(random.choice(options))
 
     #This is for when I need a random number and cba to use google.

@@ -1,4 +1,5 @@
-import discord, random, time, praw, os, asyncio, pyrebase, requests
+import discord, random, time, praw, os, asyncio, pyrebase, requests, youtube_dl
+from discord import FFmpegPCMAudio, PCMVolumeTransformer
 from discord.ext import commands, tasks
 from dotenv import load_dotenv
 
@@ -85,17 +86,7 @@ async def on_message(message):
 
     await client.process_commands(message)
 
-#This command allows my bot to join voice channels.
-#Initially, I was planning to develop this, but then I just decided to use it to cope with loneliness.
-@client.command()
-async def join(ctx):
-        channel = ctx.author.voice.channel
-        await channel.connect()
 
-#This is for trolling ProxaBot
-@client.command()
-async def leave(ctx):
-    await ctx.voice_client.disconnect()
 
 #This is a very messy and unorganised implementation of the help command.
 #Actually... lemme shift all of this dictionary into a separate file.
