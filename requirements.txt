@@ -28,7 +28,6 @@ Eel==0.12.4
 env==0.1.0
 filelock==3.0.12
 Flask==1.1.2
-freeze==3.0
 future==0.18.2
 gcloud==0.17.0
 gevent==20.6.2
