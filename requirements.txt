@@ -72,7 +72,7 @@ pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycolors==0.1.2
 pycparser==2.20
-pycryptodome==3.4.3
+pycryptodome==3.6.6
 pyelftools==0.26
 pyfiglet==0.8.post1
 Pygments==2.7.2
