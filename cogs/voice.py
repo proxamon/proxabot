@@ -10,20 +10,22 @@ class Voice(commands.Cog):
 
     #This command allows my bot to join voice channels.
     #Initially, I was planning to develop this, but then I just decided to use it to cope with loneliness.
+    #Changed my mind and now it plays a random song from the folder audioFiles
+    #Changed my mind again and just removed that function because it takes up a lot of space on
     @commands.command()
     async def join(self, ctx):
-        channel = ctx.author.voice.channel
-        songs = os.listdir("audioFiles")
-        voice = await channel.connect()
-        chosenSong = random.choice(songs)
-        audio = FFmpegPCMAudio(f"audioFiles\\{chosenSong}")
-        voice.play(audio)
-        await ctx.send(f"Now playing: {chosenSong[:-4]}")
+        global voice 
 
+        channel = ctx.author.voice.channel
+        voice = await channel.connect()
+        await ctx.send("I have joined the voice chat.")
+
+    #This uses the youtube_dl library to download a video from youtube and play the 
     @commands.command()
     async def play(self, ctx, url, volume=0.5):
+        global voice
         try:
-            os.remove("song.webm")
+            os.remove("song.wav")
         except PermissionError:
             await ctx.send("There is currently a song playing, please wait.")
             return
@@ -40,20 +42,24 @@ class Voice(commands.Cog):
                      'quiet': True,
                      'no_warnings': True,
                      'default_search': 'auto',
-                     'source_address': '0.0.0.0'
+                     'source_address': '0.0.0.0',
+                     'postprocessors': [{
+                        'key': 'FFmpegExtractAudio',
+                        'preferredcodec': 'wav',
+                        'preferredquality': '192', }]
                     }
 
-        if ctx.voice_client is None:
-            channel = ctx.author.voice.channel
+        channel = ctx.author.voice.channel
+        if ctx.voice_client is None:    
             voice = await channel.connect()
         with youtube_dl.YoutubeDL(ydlOpts) as ydl:
             ydl.download([url])
 
         for file in os.listdir("./"):
-            if file.endswith(".webm"):
-                os.rename(file, "song.webm")
+            if file.endswith(".wav"):
+                os.rename(file, "song.wav")
         
-        chosenSong = FFmpegPCMAudio("song.webm")
+        chosenSong = FFmpegPCMAudio("song.wav")
         voice.play(chosenSong)
         voice.source = PCMVolumeTransformer(voice.source)
         voice.source.volume= volume
