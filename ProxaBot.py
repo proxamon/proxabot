@@ -107,7 +107,7 @@ async def help(ctx):
 #Always be plugging.
 @client.command()
 async def github(ctx):
-    await ctx.send("https://github.com/proxamon/proxabot")
+    await ctx.send("https://github.com/EDiasAlberto/proxabot")
     
 
 client.run(TOKEN)
