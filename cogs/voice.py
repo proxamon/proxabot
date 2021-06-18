@@ -17,10 +17,12 @@ class Voice(commands.Cog):
     @commands.command()
     async def join(self, ctx):
         global voice 
-
-        channel = ctx.author.voice.channel
-        voice = await channel.connect()
-        await ctx.send("I have joined the voice chat.")
+        try:
+            channel = ctx.author.voice.channel
+            voice = await channel.connect()
+            await ctx.send("I have joined the voice chat.")
+        except AttributeError:
+            await ctx.send("You must be connected to a voice channel to use this command.")
 
     #This uses the youtube_dl library to download a video from youtube and play the 
     @commands.command()
