@@ -1,4 +1,5 @@
-import discord, random, time, praw, os
+import discord, random, time, os
+import asyncpraw as praw
 from discord.ext import commands
 from dotenv import load_dotenv
 from prawcore.exceptions import NotFound
@@ -22,8 +23,9 @@ class Reddit(commands.Cog):
         await ctx.send("Test successful.")
 
     #This is a short function to simplify and tidy up the "$meme", "$dankmeme" and "$wholesome" commands
-    def fetchMeme(self, ctx, subreddit):
-        randPost=reddit.subreddit(subreddit).random()
+    async def fetchMeme(self, ctx, subreddit):
+        subreddit = await reddit.subreddit(subreddit)
+        randPost = await subreddit.random()
         if not randPost.over_18:
             postAuthor = randPost.author.name
             postUpvotes = randPost.score
@@ -52,39 +54,44 @@ class Reddit(commands.Cog):
     #This is a command to fetch a meme from r/dankmemes
     @commands.command()
     async def dankmeme(self, ctx):
-        embed = self.fetchMeme(ctx, "dankmemes")
+        embed = await self.fetchMeme(ctx, "dankmemes")
         await ctx.send(embed=embed)
 
     #This is the same as above but for r/wholesomememes
     @commands.command()
     async def wholesome(self, ctx):
-        embed = self.fetchMeme(ctx, "wholesomememes")
+        embed = await self.fetchMeme(ctx, "wholesomememes")
         await ctx.send(embed=embed)
 
     #Same as above but for r/memes
     @commands.command()
     async def meme(self, ctx):
-        embed = self.fetchMeme(ctx, "memes")
+        embed = await self.fetchMeme(ctx, "memes")
         await ctx.send(embed=embed)
 
     @commands.command()
     async def eyebleach(self, ctx):
-        embed = self.fetchMeme(ctx, "eyebleach")
+        embed = await self.fetchMeme(ctx, "eyebleach")
         await ctx.send(embed=embed)
 
     @commands.command()
     async def animals(self, ctx):
         animalSubreddits = ["aww", "sneks", "rarepuppers", "pigtures", "wildlifephotography"]
-        embed = self.fetchMeme(ctx, random.choice(animalSubreddits))
+        embed = await self.fetchMeme(ctx, random.choice(animalSubreddits))
         await ctx.send(embed=embed)
         
+    @commands.command(aliases=["nuggets", "nugget", "nuggie"])
+    async def nuggies(self, ctx):
+        embed = await self.fetchMeme(ctx, "chickennuggets")
+        await ctx.send(embed=embed)
+
 
     @commands.command()
     async def redditfetch(self, ctx, subreddit=None):
         if subreddit!=None:
             try:
                 subreddit=subreddit.strip("r/")
-                embed = self.fetchMeme(ctx, subreddit)
+                embed = await self.fetchMeme(ctx, subreddit)
                 await ctx.send(embed=embed)
             except NotFound:
                 await ctx.send("That subreddit does not exist.")

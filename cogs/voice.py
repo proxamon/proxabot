@@ -3,6 +3,8 @@ from discord import FFmpegPCMAudio, PCMVolumeTransformer
 from discord.ext import commands
 from dotenv import load_dotenv
 
+serverQueues = {}
+
 class Voice(commands.Cog):
 
     def __init__(self, client):
@@ -22,16 +24,31 @@ class Voice(commands.Cog):
 
     #This uses the youtube_dl library to download a video from youtube and play the 
     @commands.command()
-    async def play(self, ctx, url, volume=0.5):
-        global voice
+    async def play(self, ctx, url=None, volume=0.5):
+        global voice, serverQueues
+        
+        print(ctx.guild.id)
+
         try:
             os.remove("song.wav")
         except PermissionError:
-            await ctx.send("There is currently a song playing, please wait.")
-            return
+            if url==None:
+                await ctx.send("Resuming playing...")
+                voice.resume()
+            else:
+                await ctx.send("There is currently a song playing, please wait.")
+                try:
+                    serverQueues[ctx.guild.id].append(url)
+                except KeyError:
+                    serverQueues[ctx.guild.id] = [url]
+        except FileNotFoundError:
+            serverQueues[ctx.guild.id] = [url]
         except Exception as e:
             print(e)
-            pass
+
+        print(serverQueues[ctx.guild.id])
+
+
         ydlOpts  = {'format': 'bestaudio/best',
                      'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
                      'restrictfilenames': True,
@@ -53,7 +70,12 @@ class Voice(commands.Cog):
         if ctx.voice_client is None:    
             voice = await channel.connect()
         with youtube_dl.YoutubeDL(ydlOpts) as ydl:
-            ydl.download([url])
+            try:
+                ydl.download([serverQueues[ctx.guild.id][0]])
+                serverQueues[ctx.guild.id].remove(url)
+            except TypeError:
+                await ctx.send("Error: Nothing to play")
+                return
 
         for file in os.listdir("./"):
             if file.endswith(".wav"):
@@ -64,12 +86,43 @@ class Voice(commands.Cog):
         voice.source = PCMVolumeTransformer(voice.source)
         voice.source.volume= volume
 
+    @commands.command()
+    async def pause(self, ctx):
+        global voice
+        try:
+            voice.pause()
+        except Exception as e:
+            print(e)
+            
+    @commands.command()
+    async def resume(self, ctx):
+        global voice
+        try:
+            voice.resume()
+            await ctx.send("Resuming playing...")
+        except Exception as e:
+            print(e)
+
+    @commands.command()
+    async def stop(self, ctx):
+        global voice 
+        try:
+            voice.stop()
+        except Exception as e:
+            print(e)
+
+
+
+
 
 
     #This is for trolling ProxaBot
     @commands.command()
     async def leave(self, ctx):
+        global voice
         await ctx.voice_client.disconnect()
+        voice = None
+
 
 
 

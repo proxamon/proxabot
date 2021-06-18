@@ -68,7 +68,8 @@ async def on_message(message):
     logData=[]
     responses1=["Still you","https://www.youtube.com/watch?v=TyfNZs2dPto",
                 "ur dad", "It's not me, it's youuuuu.", "no u.", "uno reverse",
-                "ur face", "undoubtedly u" ]
+                "ur face", "undoubtedly u", "ew no", "are you 5?", "stay away from me",
+                "haha you're so funny /s", "i see you've run out of responses." ]
     if ("no u " in str(message.content.lower()) and not(message.author == client.user)) or (str(message.content.lower())=="no u"):
         reply=random.choice(responses1)
         await message.channel.send(reply)
