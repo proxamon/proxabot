@@ -1,29 +1,16 @@
-import discord, random, time, praw, os, asyncio, pyrebase, requests, youtube_dl
+import discord, random, time, praw, asyncio, requests, youtube_dl, pymongo
 from discord import FFmpegPCMAudio, PCMVolumeTransformer
 from discord.ext import commands, tasks
 from dotenv import load_dotenv
+from os import getenv, listdir
 
 coinIsDrop = False
 numCoins = 0
 
 #This loads in some secret variables for the connections to discord API and Firebase API
 load_dotenv()
-TOKEN=os.getenv("DISCORD_TOKEN")
-EMAIL=os.getenv("EMAIL_FIREBASE")
-PWORD_FIREBASE=os.getenv("PWORD_FIREBASE")
-GOOGLE_APPLICATION_CREDS=os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+TOKEN=getenv("DISCORD_TOKEN")
 
-config = {
-    "apiKey": "AIzaSyDtPkzN9bayRlhOEUpkz0e68bFITjU4Dsw",
-    "authDomain": "proxabot-data.firebaseapp.com",
-    "databaseURL": "https://proxabot-data.firebaseio.com",
-    "projectId": "proxabot-data",
-    "storageBucket": "proxabot-data.appspot.com",
-    "messagingSenderId": "307753301122",
-    "appId": "1:307753301122:web:5d9b4a4eef3faa42d1309b",
-    "measurementId": "G-BZQ4PP7W6W",
-    "serviceAccount": GOOGLE_APPLICATION_CREDS
-}
 
 #This initialises the bot with the prefix "$"
 client=commands.Bot(command_prefix="$")
@@ -47,7 +34,7 @@ async def coinDrop(message):
 #It also loads all the functions of the bot from the other files.
 @client.event
 async def on_ready():
-    for file in os.listdir("./cogs"):
+    for file in listdir("./cogs"):
         try:
             if file.endswith(".py"):
                 client.unload_extension(f"cogs.{file[0:-3]}")

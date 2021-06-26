@@ -3,6 +3,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 
 #Variables to be used in the roast command
+#If this pastebin gets taken down or removed, this command will cease to work
 roastSource = "https://pastebin.com/raw/HCMHrihv"
 roasts = requests.get(roastSource)
 listOfRoasts = [m[:-2] for m in roasts.text.split("\n")]

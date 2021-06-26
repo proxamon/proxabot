@@ -1,6 +1,13 @@
-import discord, random, time, praw, os
+import discord, random, time, praw, pymongo
+from os import getenv
 from discord.ext import commands
 from dotenv import load_dotenv
+
+load_dotenv()
+mongoDBURL = getenv("MONGO_DB_URL")
+client = pymongo.MongoClient(mongoDBURL)
+db = client.Proxabot
+
 
 #This is a class for the muteRole because I was dum when making the mute functions.
 class muteRole:
@@ -11,6 +18,16 @@ class Admin(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+
+    async def fetchMuteRole(self, ctx, guildID):
+        muteRoles = db.muteRoles
+        record = muteRoles.find_one({"guild":ctx.guild.id})
+        if record==None:
+            await ctx.send(f"Sorry, you have not set a mute role yet.")
+            await ctx.send("Please set a role through $muterole <mentionTheRoleHere>")
+            return None
+        return muteRole(record["role"])
+
 
     #Bans people.
     @commands.command()
@@ -44,24 +61,9 @@ class Admin(commands.Cog):
     @commands.command(aliases = ["muterole", "setmuterole", "MuteRole"])
     async def setMuteRole(self, ctx, role : discord.Role):
 
-        file = open("botData/muteRoles.txt", "r")
-        lines = file.readlines()
-        file.close()
-
-        file = open("botData/muteRoles.txt", "w")
-        for x in range(len(lines)):
-            try:
-                if (lines[x].strip().split(":"))[0]==str(ctx.guild.id):
-                    del lines[x]
-            except:
-                pass
-        for line in lines:
-            file.write(line)
-        file.close()
-
-        file=open("botData/muteRoles.txt", "a")
-        file.write(f"{ctx.guild.id}:{role.id}\n")
-        file.close()
+        muteRoles = db.muteRoles
+        muteRoles.delete_one({"guild":ctx.guild.id})
+        muteRoles.insert_one({"guild":ctx.guild.id, "role":role.id})
 
         await ctx.send(f"Set Mute Role to {role.mention}")
 
@@ -69,19 +71,16 @@ class Admin(commands.Cog):
     @commands.command()
     @commands.has_permissions(manage_roles=True)
     async def mute(self, ctx, member : discord.Member, *, reason = "LUL"):
-        file = open("botData/muteRoles.txt", "r")
-        for line in file:
-            guildID, roleID = line.strip().split(":")
-            if guildID==str(ctx.guild.id):
-                muteRole1=muteRole(roleID)
-                break
-        file.close()
+
+        muteRole1 = await self.fetchMuteRole(ctx, ctx.guild.id)
+
+        if muteRole1==None:
+            return
+
         try:
             await member.add_roles(muteRole1)
             await ctx.send(f"Muted {member.mention}")
-        except UnboundLocalError:
-            await ctx.send(f"Sorry, you have not set a mute role yet.")
-            await ctx.send("Please set a role through $muterole <mentionTheRoleHere>")
+            
         except Exception as e:
             await ctx.send(e)
 
@@ -90,19 +89,16 @@ class Admin(commands.Cog):
     @commands.command()
     @commands.has_permissions(manage_roles=True)
     async def unmute(self, ctx, member : discord.Member, *, reason = "LUL"):
-        file = open("botData/muteRoles.txt", "r")
-        for line in file:
-            guildID, roleID = line.strip().split(":")
-            if guildID==str(ctx.guild.id):
-                muteRole1=muteRole(roleID)
-                break
-        file.close()
+        muteRole1 = await self.fetchMuteRole(ctx, ctx.guild.id)
+
+        if muteRole1==None:
+            return
+
         try:
             await member.remove_roles(muteRole1)
             await ctx.send(f"Unmuted {member.mention}")
-        except UnboundLocalError:
-            await ctx.send(f"Sorry, you have not set a mute role yet.")
-            await ctx.send("Please set a role through $muterole <mentionTheRoleHere>")
+        except Exception as e:
+            await ctx.send(e)
 
     #Deletes a given number of messages, default 5, maximum 20
     @commands.command()
