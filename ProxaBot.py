@@ -17,17 +17,6 @@ client=commands.Bot(command_prefix="$")
 
 #This allows me to write my own help command.
 client.remove_command("help")
-
-async def coinDrop(message):
-    global coinIsDrop
-    global numCoins
-    numCoins = random.randint(0, 1000)
-    await message.channel.send(f"**EVENT**")
-    await message.channel.send(f"Quick! Send \"claim\" to claim the coins!!")
-    await message.channel.send("You have 30 seconds!")
-    coinIsDrop = True
-    await asyncio.sleep(30)
-    coinIsDrop = False
     
 
 #This is just a short event that runs when the bot connects. It will print out "Bot is ready", for when I'm debugging, and also set its status to "$help"
@@ -68,12 +57,13 @@ async def on_message(message):
     #if message.author.id==284738961631608832 and random.randint(1, 100)>65:
         # await message.channel.send(message.content)
 
-        
-
-
-
     await client.process_commands(message)
 
+
+@client.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandOnCooldown):
+        await ctx.send(f"This command is on cooldown, you can use it in {round(error.retry_after, 2)} seconds.")
 
 
 #This is a very messy and unorganised implementation of the help command.
