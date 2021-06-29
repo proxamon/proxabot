@@ -42,7 +42,7 @@ class Banking(commands.Cog):
         currency = self.client.get_cog("Currency")
         amount = int(amount)
         bankBal = await self.fetchUserBankBal(ctx.message.author)
-        if bankBal>amount:
+        if bankBal>=amount:
             await currency.increaseUserMoney(ctx, ctx.message.author, amount)
             await self.decreaseBankBal(ctx, ctx.message.author, amount)
         else:
@@ -57,7 +57,7 @@ class Banking(commands.Cog):
         currency = self.client.get_cog("Currency")
         amount = int(amount)
         walletBal = await currency.fetchUserMoney(ctx.message.author)
-        if walletBal>amount:
+        if walletBal>=amount:
             await currency.reduceUserMoney(ctx, ctx.message.author, amount)
             await self.increaseBankBal(ctx, ctx.message.author, amount)
         else:
