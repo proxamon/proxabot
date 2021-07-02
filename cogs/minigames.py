@@ -10,6 +10,7 @@ class Minigames(commands.Cog):
 
     @commands.command()
     async def guess(self, ctx, countdown=5, randomNum=0):
+        currency = client.get_cog("Currency")
         
 
         if countdown==5:
@@ -23,6 +24,8 @@ class Minigames(commands.Cog):
         
         if int(attempt.content)==randomNum:
             await ctx.send(f"Good job, you got it in {6-countdown} tries! :D ")
+            winnings = random.randint(1, 2000)
+            await currency.increaseUserMoney(ctx, ctx.message.author, winnings)
         else:
             await ctx.send("Unfortunately, you did not get it correct.")
             if max(randomNum, int(attempt.content))==randomNum:
