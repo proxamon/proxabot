@@ -1,4 +1,4 @@
-import discord, random, time, praw, pymongo
+import discord, random, time, praw, pymongo, string
 from discord.ext import commands, tasks
 from dotenv import load_dotenv
 from os import getenv
@@ -42,10 +42,21 @@ class Store(commands.Cog):
     async def buy(self, ctx, *, itemName):
         user = ctx.message.author
         currency = self.client.get_cog("Currency")
-        itemDetails = shop.find_one({"name":itemName.capitalize()})
+        itemDetails = shop.find_one({"name":string.capwords(itemName)})
+
+
+        if itemName.lower()=="body pillow":
+            try:
+                await ctx.send("Please send the name of the waifu/husbando of whom you would like this pillow to be: ")
+                attempt = await self.client.wait_for("message", check=lambda message: message.author==user, timeout=30.0)
+                itemName = f"{string.capwords(attempt.content)} Body Pillow"
+            except asyncio.TimeoutError:
+                return await ctx.send("No name specified, forfeiting purchase.")
+
         didReduce = await currency.reduceUserMoney(ctx, user, int(itemDetails["price"]))
         if not didReduce:
             return
+        
         await self.updateUserInventory(user, itemName.capitalize(), "addition")
         embed = await self.genInvEmbed(user)
         await ctx.send(f"{user.display_name}, your updated inventory:")

@@ -17,7 +17,7 @@ class Minigames(commands.Cog):
             await ctx.send("I have chosen a random number between 1 and 20 (inclusive).")
             await ctx.send("You have 5 tries to guess it.")
         try:
-            attempt = await self.client.wait_for("message", check=lambda message: message.author==ctx.author and message.content.isdigit(), timeout=30.0)
+            attempt = await self.client.wait_for("message", check=lambda message: message.author==ctx.message.author and message.content.isdigit(), timeout=30.0)
         except asyncio.TimeoutError:
             return await ctx.send(f"Timed out. The answer was {randomNum}")
         

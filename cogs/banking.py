@@ -38,9 +38,12 @@ class Banking(commands.Cog):
         if amount==None:
             await ctx.send("You need to specify how much to withdraw")
             return 
+        elif amount.lower()=="max" or amount.lower()=="all":
+            amount = await self.fetchUserBankBal(ctx.message.author)
+        else:
+            amount = int(amount)
 
         currency = self.client.get_cog("Currency")
-        amount = int(amount)
         bankBal = await self.fetchUserBankBal(ctx.message.author)
         if bankBal>=amount:
             await currency.increaseUserMoney(ctx, ctx.message.author, amount)
@@ -48,14 +51,17 @@ class Banking(commands.Cog):
         else:
             await ctx.send(f"Error! {ctx.message.author.mention}, you do not have that much money.")
 
-    @commands.command()
+    @commands.command(aliases=["dep"])
     async def deposit(self, ctx, amount=None):
+        currency = self.client.get_cog("Currency")
         if amount==None:
             await ctx.send("You need to specify how much to deposit")
             return 
+        elif amount.lower()=="max" or amount.lower()=="all":
+            amount = await currency.fetchUserMoney(ctx.message.author)
+        else:
+            amount = int(amount)    
 
-        currency = self.client.get_cog("Currency")
-        amount = int(amount)
         walletBal = await currency.fetchUserMoney(ctx.message.author)
         if walletBal>=amount:
             await currency.reduceUserMoney(ctx, ctx.message.author, amount)
