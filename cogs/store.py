@@ -51,6 +51,14 @@ class Store(commands.Cog):
         await ctx.send(f"{user.display_name}, your updated inventory:")
         await ctx.send(embed=embed)
 
+    @commands.command()
+    async def shop(self, ctx):
+        shopItems = shop.find()
+        embed = discord.Embed(colour=discord.Colour.blue())
+        embed.title="Shop"
+        for item in shopItems:
+            embed.add_field(name=item["name"],value=f"{item['price']} amoguscoins", inline=False)
+        await ctx.send(embed=embed)
 
 
 

@@ -26,7 +26,7 @@ class Currency(commands.Cog):
         currentMoney = await self.fetchUserMoney(user)
         currentMoney += money
         currency.update_one({"user":user.id},{"$set":{"money":currentMoney}})
-        await ctx.send(f"{user.mention}, your current balance is {currentMoney} coins.")
+        await ctx.send(f"{user.display_name}, your current balance is {currentMoney} coins.")
     
     async def reduceUserMoney(self, ctx, user, payment):
         currency = db.currency 
@@ -36,7 +36,7 @@ class Currency(commands.Cog):
             return False
         updatedMoney = currentMoney - payment
         currency.update_one({"user":user.id},{"$set":{"money":updatedMoney}})
-        await ctx.send(f"{user.mention}, your current balance is {updatedMoney} coins.")
+        await ctx.send(f"{user.display_name}, your current balance is {updatedMoney} coins.")
         return True
 
     @commands.command()
@@ -80,12 +80,17 @@ class Currency(commands.Cog):
 
     @commands.command(aliases=["bal", "wallet"])
     async def balance(self, ctx, member: discord.Member = None):
+        banking = self.client.get_cog("Banking")
         if member!=None:
             userBal = await self.fetchUserMoney(member)
-            await ctx.send(f"{member.display_name}\'s current balance is {userBal} coins.")
+            bankBal = await banking.fetchUserBankBal(member)
+            await ctx.send(f"{member.display_name}\'s current balance is {userBal} amoguscoins.")
+            await ctx.send(f"{member.display_name}\'s current bank balance is {bankBal} amoguscoins.")
         else:
             userBal = await self.fetchUserMoney(ctx.message.author)
-            await ctx.send(f"{ctx.message.author.mention}, your current balance is {userBal} coins.")
+            bankBal = await banking.fetchUserBankBal(ctx.message.author)
+            await ctx.send(f"{ctx.message.author.display_name}, your current balance is {userBal} amoguscoins.")
+            await ctx.send(f"{ctx.message.author.display_name}\'s current bank balance is {bankBal} amoguscoins.")
 
 def setup(client):
     for command in commands.Cog.get_commands(Currency):
