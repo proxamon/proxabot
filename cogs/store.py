@@ -29,7 +29,12 @@ class Store(commands.Cog):
         return embed
     
     async def updateUserInventory(self, user, item, mode="addition"):
-        currentUserInventory = list(inventories.find_one({"user":user.id})["inventory"])
+        currentUserInventory = inventories.find_one({"user":user.id})
+        if currentUserInventory == None:
+            inventories.insert_one({"user":user.id, "inventory":[]})
+            currentUserInventory = list(inventories.find_one({"user":user.id})["inventory"])
+        else:
+            currentUserInventory = list(currentUserInventory["inventory"])
         if mode=="addition":
             currentUserInventory.append(item)
         else:
