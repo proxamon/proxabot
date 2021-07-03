@@ -7,11 +7,11 @@ import asyncio
 
 load_dotenv()
 mongoDBURL = getenv("MONGO_DB_URL")
+botOwnerID = getenv("BOT_OWNER_ID")
 client = pymongo.MongoClient(mongoDBURL)
 db = client.Proxabot
 shop = db.shop
 inventories = db.inventories
-
 
 class Store(commands.Cog):
     def __init__(self, client):
@@ -42,10 +42,12 @@ class Store(commands.Cog):
                 return False
             currentUserInventory.remove(item)
         inventories.update_one({"user":user.id},{"$set":{"inventory":currentUserInventory}})
+        return True
 
     @commands.command(aliases = ["purchase"])
     async def buy(self, ctx, *, itemName):
         user = ctx.message.author
+        botOwner = await self.client.fetch_user(int(botOwnerID))
         currency = self.client.get_cog("Currency")
         itemDetails = shop.find_one({"name":string.capwords(itemName)})
 
@@ -63,6 +65,7 @@ class Store(commands.Cog):
             return
         
         await self.updateUserInventory(user, itemName.capitalize(), "addition")
+        await currency.increaseUserMoney(ctx, botOwner, int(itemDetails["price"]), silent=True)
         embed = await self.genInvEmbed(user)
         await ctx.send(f"{user.display_name}, your updated inventory:")
         await ctx.send(embed=embed)
@@ -75,6 +78,21 @@ class Store(commands.Cog):
         for item in shopItems:
             embed.add_field(name=item["name"],value=f"{item['price']} amoguscoins", inline=False)
         await ctx.send(embed=embed)
+
+    @commands.command()
+    async def sell(self, ctx, itemName):
+        user = ctx.message.author
+        currency = self.client.get_cog("Currency")
+        itemDetails = shop.find_one({"name":string.capwords(itemName)})
+        didSell = await self.updateUserInventory(user, itemName.capitalize(), "subtraction")
+        if not didSell:
+            await ctx.send("You do not own that item")
+            return
+        embed = await self.genInvEmbed(user)
+        await currency.increaseUserMoney(ctx, user, int(itemDetails["price"]))
+        await ctx.send(f"{user.display_name}, your updated inventory:")
+        await ctx.send(embed=embed)
+
 
 
 

@@ -21,12 +21,13 @@ class Currency(commands.Cog):
             return 0
         return record["money"]
 
-    async def increaseUserMoney(self, ctx, user, money):
+    async def increaseUserMoney(self, ctx, user, money, silent=False):
         currency = db.currency
         currentMoney = await self.fetchUserMoney(user)
         currentMoney += money
         currency.update_one({"user":user.id},{"$set":{"money":currentMoney}})
-        await ctx.send(f"{user.display_name}, your current balance is {currentMoney} coins.")
+        if not silent:
+            await ctx.send(f"{user.display_name}, your current balance is {currentMoney} coins.")
     
     async def reduceUserMoney(self, ctx, user, payment):
         currency = db.currency 
