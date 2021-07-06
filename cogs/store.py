@@ -91,8 +91,8 @@ class Store(commands.Cog):
         await ctx.send(f"{user.display_name}, your updated inventory:")
         await ctx.send(embed=embed)
 
-    @commands.command()
-    async def shop(self, ctx):
+    @commands.command(aliases=["shop"])
+    async def store(self, ctx):
         shopItems = shop.find()
         embed = discord.Embed(colour=discord.Colour.blue())
         embed.title="Shop"
