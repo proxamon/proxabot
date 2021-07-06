@@ -4,8 +4,6 @@ from discord.ext import commands, tasks
 from dotenv import load_dotenv
 from os import getenv, listdir
 
-coinIsDrop = False
-numCoins = 0
 
 #This loads in some secret variables for the connections to discord API and Firebase API
 load_dotenv()
