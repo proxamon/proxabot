@@ -17,13 +17,34 @@ class Store(commands.Cog):
     def __init__(self, client):
         self.client=client
 
+    async def genBodyPillowList(self, user):
+        pillowList=[]
+        userData = inventories.find_one({"user":user.id})
+        embed = discord.Embed(colour=discord.Colour.blue())
+        embed.title="Pillows"
+        if userData is None:
+            return embed
+        invList = list(userData["inventory"])
+        for item in invList:
+            if item.__contains__("body pillow"):
+                pillowList.append(item)
+        for i in range(len(pillowList)):
+            embed.add_field(name=pillowList[i+1], value=f"Pillow #{i}", inline=False)
+        return embed
+        
+
+
     async def genInvEmbed(self, user):
         userData = inventories.find_one({"user":user.id})
         embed = discord.Embed(colour=discord.Colour.blue())
         embed.title="Inventory"
         if userData is None:
             return embed
-        items = Counter(list(userData["inventory"]))
+        invList = list(userData["inventory"])
+        for i in range(len(invList)):
+            if "body pillow" in invList[i]:
+                invList[i]="Body Pillow"
+        items = Counter(invList)
         for item, number in items.items():
             embed.add_field(name=item, value=number, inline=False)
         return embed
@@ -92,15 +113,23 @@ class Store(commands.Cog):
         await currency.increaseUserMoney(ctx, user, int(itemDetails["price"]))
         await ctx.send(f"{user.display_name}, your updated inventory:")
         await ctx.send(embed=embed)
-
-
-
-
     
     @commands.command(aliases=["inv","items","stuff"])
-    async def inventory(self, ctx):
-        embed = await self.genInvEmbed(ctx.message.author)
+    async def inventory(self, ctx, member: discord.Member = None):
+        if member==None:
+            embed = await self.genInvEmbed(ctx.message.author)
+        else:
+            embed = await self.genInvEmbed(member)
         await ctx.send(embed = embed)
+
+    @commands.command(aliases=["pillows", "bodypillows", "bodypillow"])
+    async def bodyPillows(self, ctx, member: discord.Member = None):
+        if member==None:
+            embed = await self.genBodyPillowList(ctx.message.author)
+        else:
+            embed = await self.genBodyPillowList(member)
+        await ctx.send(embed=embed)
+
 
 
 
