@@ -25,11 +25,13 @@ class Store(commands.Cog):
         if userData is None:
             return embed
         invList = list(userData["inventory"])
+        print(invList)
         for item in invList:
             if item.__contains__("body pillow"):
                 pillowList.append(item)
+        print(pillowList)
         for i in range(len(pillowList)):
-            embed.add_field(name=pillowList[i+1], value=f"Pillow #{i}", inline=False)
+            embed.add_field(name=pillowList[i], value=f"Pillow #{i+1}", inline=False)
         return embed
         
 
