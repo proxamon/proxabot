@@ -38,23 +38,13 @@ async def on_ready():
 @client.event
 async def on_message(message):
 
-    found = False
-    logData=[]
-    responses1=["Still you","https://www.youtube.com/watch?v=TyfNZs2dPto",
+    responses=["Still you","https://www.youtube.com/watch?v=TyfNZs2dPto",
                 "ur dad", "It's not me, it's youuuuu.", "no u.", "uno reverse",
                 "ur face", "undoubtedly u", "ew no", "are you 5?", "stay away from me",
                 "haha you're so funny /s", "i see you've run out of responses." ]
     if ("no u " in str(message.content.lower()) and not(message.author == client.user)) or (str(message.content.lower())=="no u"):
         reply=random.choice(responses1)
         await message.channel.send(reply)
-    #elif "thank" in str(message.content.lower()) and not(message.author == client.user):
-        #reply=random.choice(responses2)
-        #await message.channel.send(reply)
-    #if random.randint(0, 10)==7:
-    #    await message.channel.send("Pokemon Spawned")
-    #if message.author.id==284738961631608832 and random.randint(1, 100)>65:
-        # await message.channel.send(message.content)
-
     await client.process_commands(message)
 
 
@@ -68,17 +58,30 @@ async def on_command_error(ctx, error):
 #Actually... lemme shift all of this dictionary into a separate file.
 #That's better.
 @client.command()
-async def help(ctx):
-    author=ctx.message.author
+async def help(ctx, category=None):
     embed= discord.Embed( colour = discord.Colour.blue())
+    author=ctx.message.author
     embed.set_author(name="Help")
-
-    with open("botData/commands.txt", "r") as file:
-        for line in file:
-            command, helpText = line.strip(",\n").replace("\"", "").split(":")
-            embed.add_field(name=f"${command}", value=helpText, inline=False)
+    cogs = sorted(client.cogs)
+    if category==None:
+        for cog in cogs:
+            embed.add_field(name=f"{cog}", value="Category", inline=True)
+        return await ctx.send(embed=embed)
     
-    await ctx.send(author, embed=embed)
+    requestedCog = client.get_cog(category.capitalize())
+    if requestedCog==None:        
+        await ctx.send("That category does not exist.")
+        return await ctx.send("Run '$help' to see all the categories.")
+
+    cogCommands = requestedCog.get_commands()
+    for command in cogCommands:
+        aliases = command.aliases
+        if len(aliases)==0:
+            aliases="No Aliases"
+        embed.add_field(name=f"{command.name}", value=f"Aliases: {aliases}", inline=False)
+
+
+    await ctx.send(embed=embed)
 
 #Always be plugging.
 @client.command()
