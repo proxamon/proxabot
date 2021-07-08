@@ -92,7 +92,27 @@ class Minigames(commands.Cog):
         embed.add_field(name='\u200b', value=rouletteWheel, inline=False)
         embed.add_field(name="\u200b",value=message,  inline=False)
         await ctx.send(embed=embed)
-    
+   
+    @commands.command()
+    async def lottery(self, ctx):
+        ticketCost = 500
+        winnings = 1000000
+        currency = self.client.get_cog("Currency")
+        didReduce = await currency.reduceUserMoney(ctx, ctx.message.author, ticketCost, True)
+        if not didReduce:
+            await ctx.send("A ticket costs {ticketCost} amoguscoins")
+            return
+        if random.randint(1,100)==69:
+            await currency.increaseUserMoney(ctx, ctx.message.author, winnings+ticketCost, True)
+            embed = discord.Embed(colour=discord.Colour.green())
+            message = f"You won! You win {winnings} amoguscoins"
+        else:
+            embed = discord.Embed(colour=discord.Colour.red())
+            message = "You didn't win anything... this time. Better luck next time :)"
+        embed.title="Lottery Results"
+        embed.add_field(name="\u200b",value=message,  inline=False)
+        await ctx.send(embed=embed)
+        
 
 def setup(client):
     for command in commands.Cog.get_commands(Minigames):
