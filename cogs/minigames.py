@@ -7,6 +7,21 @@ class Minigames(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+        self.amogusEmojiIDs = [862406483140542474,
+                               862406483140542474,
+                               862406483140542474,
+                               862406483140542474,
+                               862406524415770624,
+                               862406555827437598,
+                               862406583865966612,
+                               862406609123541002,
+                               862406646605283338,
+                               862406673371889688,
+                               862406700224217149,
+                               862406721259831326,
+                               862406743224877056,
+                               862406772613447691,
+                               862406816683786271]
 
     @commands.command()
     async def guess(self, ctx, countdown=5, randomNum=0):
@@ -39,9 +54,45 @@ class Minigames(commands.Cog):
             await self.guess(ctx, countdown, randomNum)
 
 
+    @commands.command()
+    async def roulette(self, ctx, amount=1):
+        currency = self.client.get_cog("Currency")
+        rouletteWheel=""
+        usrBal = await currency.fetchUserMoney(ctx.message.author)
+        if usrBal<amount:
+            return await ctx.send("You can't bet that much!")
+
+        if amount<0:
+            return await ctx.send("You can't bet negative amounts!")
+
+        failureID = 862406483140542474 #ID of red impostor 
+        emojis = self.amogusEmojiIDs
+        random.shuffle(emojis)
+        chosenFive = emojis[0:5]
+        result = chosenFive[2]
+        if result == failureID:
+            colour = discord.Colour.red()
+            await currency.reduceUserMoney(ctx, ctx.message.author, amount, True)
+            message = f"You got the red impostor! Your result was SUS! You lose {amount} coins."
+        else:
+            colour = discord.Colour.green()
+            amount = amount//4
+            await currency.increaseUserMoney(ctx,ctx.message.author, amount, True)
+            message = f"You got a crewmate! You won {amount} coins."
 
 
-
+        embed = discord.Embed(colour = colour)
+        embed.title = "Amogus roulette"
+        embed.add_field(name="\u200b", value="The middle crewmate is your result.", inline=False)
+        for emojiID in chosenFive:
+            emoji = self.client.get_emoji(emojiID)
+            #embed.add_field(name="\u200b",value=self.client.get_emoji(emojiID),  inline=True)
+            rouletteWheel+=f"{str(emoji)}"
+            rouletteWheel+="\t"
+        embed.add_field(name='\u200b', value=rouletteWheel, inline=False)
+        embed.add_field(name="\u200b",value=message,  inline=False)
+        await ctx.send(embed=embed)
+    
 
 def setup(client):
     for command in commands.Cog.get_commands(Minigames):

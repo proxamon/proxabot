@@ -29,7 +29,7 @@ class Currency(commands.Cog):
         if not silent:
             await ctx.send(f"{user.display_name}, your current balance is {currentMoney} coins.")
     
-    async def reduceUserMoney(self, ctx, user, payment):
+    async def reduceUserMoney(self, ctx, user, payment, silent=False):
         currency = db.currency 
         currentMoney = await self.fetchUserMoney(user)
         if payment>currentMoney:
@@ -37,7 +37,8 @@ class Currency(commands.Cog):
             return False
         updatedMoney = currentMoney - payment
         currency.update_one({"user":user.id},{"$set":{"money":updatedMoney}})
-        await ctx.send(f"{user.display_name}, your current balance is {updatedMoney} coins.")
+        if not silent:
+            await ctx.send(f"{user.display_name}, your current balance is {updatedMoney} coins.")
         return True
 
     @commands.command()
@@ -50,6 +51,9 @@ class Currency(commands.Cog):
 
     @commands.command()
     async def send(self, ctx, recipient: discord.Member=None, money=None):
+        if int(money)<0:
+            return await ctx.send("You can't send negative amounts! Are you trying to break me??")
+
         if recipient==None or type(recipient) is int or money==None:
             await ctx.send("There was an error.")
             await ctx.send("Please format the message as follows: ")
