@@ -23,22 +23,32 @@ class Reddit(commands.Cog):
         await ctx.send("Test successful.")
 
     #This is a short function to simplify and tidy up the "$meme", "$dankmeme" and "$wholesome" commands
-    async def fetchMeme(self, ctx, subreddit):
-        subreddit = await reddit.subreddit(subreddit)
-        randPost = await subreddit.random()
+    async def fetchMeme(self, ctx, subreddit, attempts=1):
+        subredditObj = await reddit.subreddit(subreddit)
+        randPost = await subredditObj.random()
         if not randPost.over_18:
             postAuthor = randPost.author.name
             postUpvotes = randPost.score
             postTitle = randPost.title
             url=randPost.url
             footer = postUpvotes
+            print(randPost.post_hint)
             redditUpvote = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn130.picsart.com%2F304352163103211.png&f=1&nofb=1"
 
             if randPost.is_self:
                 embed = discord.Embed(colour = discord.Colour.blue(), title = postTitle, description = randPost.selftext)
-            elif "youtu.be" in url or "youtube" in url:
-                embed = discord.Embed(colour = discord.Colour.red(), description = "Apologies, but videos posts are not currently supported.")
-                return embed
+            elif randPost.is_video or randPost.post_hint in ["gallery", "rich:video"]:
+                print("video detected")
+                if attempts==5:
+                    print("Should be error message")
+                    embed = discord.Embed(colour = discord.Colour.red(), description = "I could only find videos, which are not currently supported.")
+                    attempts=0
+                    return await ctx.send(embed=embed)
+                attempts+=1
+                print("finding new result")
+                await self.fetchMeme(ctx, subreddit, attempts)
+                print("found new result")
+                
             else:
                 embed= discord.Embed(colour = discord.Colour.blue(), title = postTitle)
                 embed.set_image(url=url)
