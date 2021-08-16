@@ -1,6 +1,7 @@
 import discord, random, time, praw, os
 from discord.ext import commands
 from dotenv import load_dotenv
+import requests
 
 class Minigames(commands.Cog):
 
@@ -78,6 +79,22 @@ class Minigames(commands.Cog):
     @commands.command()
     async def nut(self, ctx):
         await ctx.send("nut")
+
+    @commands.command()
+    async def xkcd(self, ctx, number=None):
+        if number==None:
+            limit = requests.get("https://xkcd.com/info.0.json").json()["num"]
+            number = random.randint(1, limit)
+        result = requests.get(f"https://xkcd.com/{number}/info.0.json")
+        if result.status_code == 404:
+            await ctx.send("Invalid xkcd number!")
+            return
+        result = result.json()
+        embed = discord.Embed(colour = discord.Colour.blue())
+        embed.title = result["safe_title"]
+        embed.set_image(url=result["img"])
+        embed.set_footer(text=result["alt"])
+        await ctx.send(embed=embed)
 
 def setup(client):
     for command in commands.Cog.get_commands(Minigames):
