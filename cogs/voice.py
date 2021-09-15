@@ -1,4 +1,4 @@
-import discord, random, time, praw, os, youtube_dl
+import discord, random, time, praw, os, youtube_dl, nacl
 from discord import FFmpegPCMAudio, PCMVolumeTransformer
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -33,6 +33,7 @@ class Voice(commands.Cog):
 
         try:
             os.remove("song.wav")
+            serverQueues[ctx.guild.id] = [url]
         except PermissionError:
             if url==None:
                 await ctx.send("Resuming playing...")
@@ -110,6 +111,7 @@ class Voice(commands.Cog):
         global voice 
         try:
             voice.stop()
+            serverQueues[ctx.guild.id] = []
         except Exception as e:
             print(e)
 
