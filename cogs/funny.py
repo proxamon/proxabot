@@ -1,7 +1,12 @@
-import discord, random, time, praw, os
+import discord, random, time, praw, os, pymongo
 from discord.ext import commands
 from dotenv import load_dotenv
 import requests
+
+load_dotenv()
+mongoDBURL = os.getenv("MONGO_DB_URL")
+dbClient = pymongo.MongoClient(mongoDBURL)
+db = dbClient.Proxabot
 
 class Minigames(commands.Cog):
 
@@ -79,6 +84,49 @@ class Minigames(commands.Cog):
     @commands.command()
     async def nut(self, ctx):
         await ctx.send("nut")
+
+    @commands.command()
+    async def quote(self, ctx, quote= None):
+        quotes= db.quotes
+
+        if quote==None:
+            await ctx.send("Use of command invalid.")
+            await ctx.send("$quote @user - This will fetch the quote (if available) of the mentioned user.")
+            await ctx.send("$quote {message URL} - This will change the quote of the message author to the linked quote")
+            await ctx.send("Ensure message URL is a valid URL")
+            return
+        
+        msg = None
+        if "<" in quote: 
+            memberID = quote[3:-1]
+            member = await self.client.fetch_user(memberID)
+            userData = quotes.find_one({"user":member.id})
+            if userData==None:
+                await ctx.send("There is no quote for this user")
+            else:
+                quote = userData["quote"]
+                await ctx.send(f"\"{quote}\" - {member.display_name}")
+            return
+        else:
+            msg = quote
+            member = None
+
+        linkSects = msg.split("/")
+        guild = int(linkSects[-3])
+        channel = int(linkSects[-2])
+        message = int(linkSects[-1])
+        msgText = await self.client.get_guild(guild).get_channel(channel).fetch_message(message)
+        author = msgText.author
+        msg = msgText.content
+        userData = quotes.find_one({"user":author.id})
+
+        if userData==None:
+            quotes.insert_one({"user":author.id, "quote":msg})
+        else:
+            quotes.update_one({"user":author.id},{"$set":{"quote":msg}})
+
+        await ctx.send(f"{author.display_name}'s quote has been updated")
+            
 
     @commands.command()
     async def xkcd(self, ctx, number=None):
